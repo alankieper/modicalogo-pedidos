@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Pedido de cambio</title>
+<style>
+:root { --c: #1F3A8F; --ac: #F39200; --tinta: #14213D; --gris: #6B7488; --borde: #E1E6EF; --fondo: #F2F4F8; --rojo: #D93838; --verde: #18A058; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--fondo); color: var(--tinta); font: 16px/1.45 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+button, input, textarea, select { font: inherit; color: inherit; }
+.cab { background: radial-gradient(120% 90% at 85% 0%, color-mix(in srgb, var(--c) 80%, white) 0%, var(--c) 55%, color-mix(in srgb, var(--c) 75%, black) 100%);
+  color: #fff; padding: calc(26px + env(safe-area-inset-top)) 20px 64px; text-align: center; }
+.cab small { display: inline-block; padding: 4px 12px; border-radius: 99px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25); font-size: 11.5px; letter-spacing: 1.4px; text-transform: uppercase; font-weight: 700; }
+.cab h1 { margin: 12px 0 4px; font-size: 30px; line-height: 1.1; letter-spacing: -.3px; }
+.cab p { margin: 0 auto; max-width: 420px; opacity: .85; font-size: 15px; }
+main { max-width: 560px; margin: -40px auto 0; padding: 0 16px calc(32px + env(safe-area-inset-bottom)); }
+.tarjeta { background: #fff; border-radius: 20px; padding: 20px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(20,33,61,.05), 0 12px 32px rgba(20,33,61,.08); }
+.aviso { display: flex; gap: 10px; align-items: flex-start; background: #FFF6E5; border: 1px solid #F6D9A8; color: #6B4405; border-radius: 16px; padding: 12px 14px; font-size: 14px; }
+.aviso b { display: block; }
+.paso { display: flex; align-items: center; gap: 10px; font-size: 17px; margin: 0 0 12px; color: var(--c); }
+.paso span { width: 26px; height: 26px; border-radius: 50%; background: color-mix(in srgb, var(--c) 12%, white); display: grid; place-items: center; font-size: 14px; font-weight: 800; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--borde); background: #fff; border-radius: 99px; padding: 9px 14px; cursor: pointer; font-weight: 600; font-size: 14.5px; }
+.chip[aria-pressed=true] { background: var(--c); border-color: var(--c); color: #fff; }
+.campo { width: 100%; border: 1px solid var(--borde); border-radius: 12px; padding: 12px 13px; background: #FBFCFD; font-size: 16px; }
+.campo:focus { outline: none; border-color: var(--c); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 14%, transparent); background: #fff; }
+textarea.campo { resize: vertical; min-height: 90px; }
+label.et { display: block; font-weight: 700; font-size: 13.5px; color: var(--c); margin: 12px 0 5px; }
+.res { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+.res button { text-align: left; border: 1px solid var(--borde); background: #fff; border-radius: 12px; padding: 10px 12px; cursor: pointer; }
+.res button b { display: block; color: var(--c); font-size: 15px; }
+.res button small { color: var(--gris); font-size: 12.5px; }
+.elegido { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: color-mix(in srgb, var(--c) 7%, white); margin-top: 8px; }
+.elegido b { color: var(--c); }
+.link { background: none; border: 0; color: var(--c); font-weight: 600; text-decoration: underline; cursor: pointer; padding: 6px 0; font-size: 14px; }
+.linea { display: flex; gap: 8px; margin-top: 6px; }
+.linea input { flex: 1; }
+.linea button { border: 1px solid var(--borde); background: #fff; border-radius: 10px; padding: 0 10px; cursor: pointer; color: var(--rojo); }
+.foto { display: flex; align-items: center; gap: 12px; border: 1.5px dashed #C9D0DC; border-radius: 14px; padding: 12px; margin-top: 12px; cursor: pointer; }
+.foto img { width: 56px; height: 56px; object-fit: cover; border-radius: 10px; }
+.foto span { font-size: 14px; color: var(--gris); }
+.enviar { width: 100%; height: 54px; border: 0; border-radius: 14px; background: var(--ac); color: #fff; font-weight: 800; font-size: 17px; cursor: pointer; box-shadow: 0 8px 20px color-mix(in srgb, var(--ac) 35%, transparent); }
+.enviar:disabled { opacity: .6; }
+.error { color: var(--rojo); font-weight: 600; font-size: 14px; margin: 10px 2px 0; }
+.listo { text-align: center; padding: 30px 20px; }
+.listo .ok { width: 64px; height: 64px; border-radius: 50%; background: var(--verde); color: #fff; display: grid; place-items: center; margin: 0 auto 12px; font-size: 34px; }
+.cargando { text-align: center; color: var(--gris); padding: 40px 0; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header class="cab"><small id="chip">Catálogo</small><h1>Pedido de cambio</h1><p id="frase">Desde acá podés solicitar tus modificaciones para el catálogo.</p></header>
+<main>
+  <div class="tarjeta cargando" id="cargando">Conectando…</div>
+  <div class="tarjeta" id="malo" hidden><b>Este link no funciona.</b><p>Pedile el link nuevo a quien arma el catálogo.</p></div>
+
+  <form id="form" hidden novalidate>
+    <div class="aviso" id="avisoNube"><span>☁️</span><span><b>La compu del catálogo está apagada.</b>Tu pedido queda guardado y le llega apenas la prendan. No hace falta que lo mandes de nuevo.</span></div>
+    <div style="height:14px"></div>
+    <section class="tarjeta">
+      <h2 class="paso"><span>1</span>¿Quién sos?</h2>
+      <div class="chips" id="equipo"></div>
+      <input class="campo" id="quien" placeholder="Tu nombre" maxlength="40" style="margin-top:10px" autocomplete="name">
+    </section>
+    <section class="tarjeta">
+      <h2 class="paso"><span>2</span>¿Qué producto?</h2>
+      <div id="zonaBuscar">
+        <input class="campo" id="buscar" type="search" placeholder="Nombre o código del producto" autocomplete="off">
+        <div class="res" id="res"></div>
+        <button type="button" class="link" id="btnLibre">No lo encuentro: lo escribo</button>
+      </div>
+      <div id="zonaProd" hidden>
+        <div class="elegido"><span><b id="prodNombre"></b><br><small id="prodDet"></small></span><button type="button" class="link" id="btnOtro">Cambiar</button></div>
+        <div id="editor"></div>
+        <label class="foto" id="zonaFoto"><img id="fotoImg" hidden alt=""><span id="fotoTxt">📷 Foto nueva (opcional): tocá para sacarla o subirla</span><input type="file" id="foto" accept="image/*" hidden></label>
+      </div>
+      <div id="zonaLibre" hidden>
+        <label class="et" for="libre">Contá qué hay que cambiar (con el código si lo sabés)</label>
+        <textarea class="campo" id="libre" maxlength="2000" placeholder="Ej: el 3201061 tiene largo 492mm"></textarea>
+        <label class="foto"><img id="fotoImg2" hidden alt=""><span id="fotoTxt2">📷 Foto (opcional)</span><input type="file" id="foto2" accept="image/*" hidden></label>
+        <button type="button" class="link" id="btnVolver">Volver a buscar el producto</button>
+      </div>
+    </section>
+    <button class="enviar" id="btnEnviar" type="submit">Enviar pedido</button>
+    <p class="error" id="error" hidden></p>
+  </form>
+
+  <div class="tarjeta listo" id="listo" hidden><div class="ok">✓</div><h2>¡Pedido guardado!</h2><p id="listoTxt">Le llega apenas prendan la compu del catálogo.</p><button class="link" id="btnNuevo">Mandar otro pedido</button></div>
+</main>
+<script>
+const SB = "https://apnyksshjsfrioqdiica.supabase.co", PUB = "sb_publishable_LwIINQKikHSxbYdfnw87Hw_psn-AOGV";
+const q = new URLSearchParams(location.search), N = q.get("n") || "", K = q.get("k") || "";
+const $ = (s) => document.querySelector(s);
+const esc = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const st = { quien: "", prod: null, fotos: [], info: null, libre: false };
+
+async function rpc(fn, args) {
+  const r = await fetch(`${SB}/rest/v1/rpc/${fn}`, { method: "POST", headers: { apikey: PUB, "Content-Type": "application/json" }, body: JSON.stringify(args) });
+  if (!r.ok) throw new Error("rpc " + r.status);
+  return r.json();
+}
+function conTiempo(ms) { const c = new AbortController(); setTimeout(() => c.abort(), ms); return c.signal; }
+
+(async function () {
+  let d;
+  try { d = await rpc("mc_info", { p_negocio: N, p_clave: K }); } catch { d = null; }
+  if (!d?.ok) { $("#cargando").hidden = true; $("#malo").hidden = false; return; }
+  st.info = d.info || {};
+  const I = st.info;
+  document.title = `Pedido de cambio · ${d.nombre}`;
+  if (I.color) document.documentElement.style.setProperty("--c", I.color);
+  if (I.acento) document.documentElement.style.setProperty("--ac", I.acento);
+  $("#chip").textContent = `Catálogo ${I.empresa || d.nombre}`;
+  // ¿la compu está prendida? entonces al link completo (con fotos, ortografía y la tarjeta tal cual)
+  if (I.link) {
+    try {
+      const v = await fetch(`${I.link}vivo?k=${encodeURIComponent(K)}`, { signal: conTiempo(4000) });
+      const j = v.ok ? await v.json() : null;
+      if (j?.ok) { location.replace(`${I.link}?k=${encodeURIComponent(K)}`); return; }
+    } catch { /* apagada: seguimos acá */ }
+  }
+  $("#chip").textContent = `Catálogo ${I.empresa || d.nombre}`;
+  $("#equipo").innerHTML = (I.equipo || []).map((n) => `<button type="button" class="chip" data-n="${esc(n)}">${esc(n)}</button>`).join("");
+  document.querySelectorAll("#equipo .chip").forEach((b) => b.onclick = () => elegirQuien(b.dataset.n));
+  try { const g = localStorage.getItem("mc_quien"); if (g) elegirQuien(g); } catch {}
+  if (!d.productos) { st.libre = true; $("#zonaBuscar").hidden = true; $("#zonaLibre").hidden = false; $("#btnVolver").hidden = true; }
+  $("#cargando").hidden = true; $("#form").hidden = false;
+})();
+
+function elegirQuien(n) {
+  st.quien = n; $("#quien").value = (st.info.equipo || []).includes(n) ? "" : n;
+  document.querySelectorAll("#equipo .chip").forEach((b) => b.setAttribute("aria-pressed", b.dataset.n === n));
+}
+$("#quien").oninput = (e) => { st.quien = e.target.value.trim(); document.querySelectorAll("#equipo .chip").forEach((b) => b.setAttribute("aria-pressed", "false")); };
+
+let tB;
+$("#buscar").oninput = (e) => {
+  clearTimeout(tB);
+  const t = e.target.value.trim();
+  if (t.length < 2) { $("#res").innerHTML = ""; return; }
+  tB = setTimeout(async () => {
+    const lista = await rpc("mc_buscar", { p_negocio: N, p_clave: K, p_q: t }).catch(() => []);
+    $("#res").innerHTML = lista.length ? lista.map((p, i) => `<button type="button" data-i="${i}"><b>${esc(p.nombre || p.codigo)}</b><small>${esc([p.codigo, p.detalle, p.seccion].filter(Boolean).join(" · "))}</small></button>`).join("")
+      : `<small style="color:var(--gris)">No encontré «${esc(t)}». Probá con otra palabra o escribilo.</small>`;
+    document.querySelectorAll("#res button").forEach((b) => b.onclick = () => elegirProd(lista[+b.dataset.i]));
+  }, 300);
+};
+function elegirProd(p) {
+  st.prod = p;
+  $("#zonaBuscar").hidden = true; $("#zonaProd").hidden = false;
+  $("#prodNombre").textContent = p.nombre || p.codigo;
+  $("#prodDet").textContent = [p.codigo, p.seccion, p.pagina ? `pág. ${p.pagina}` : ""].filter(Boolean).join(" · ");
+  const ed = $("#editor");
+  if (p.campos) {
+    const C = st.info.campos || {};
+    ed.innerHTML = Object.keys(C).map((k) => `<label class="et">${esc(C[k])}</label>` + (/descrip/i.test(C[k])
+      ? `<textarea class="campo" data-k="${esc(k)}" rows="3">${esc(p.campos[k] || "")}</textarea>`
+      : `<input class="campo" data-k="${esc(k)}" value="${esc(p.campos[k] || "")}">`)).join("");
+  } else if (p.tabla) {
+    ed.innerHTML = Object.keys(p.tabla).map((k) => `<label class="et">${esc(k.split(" /")[0])}</label><input class="campo" data-k="${esc(k)}" value="${esc(p.tabla[k] || "")}">`).join("");
+  } else {
+    pintarLineas(p.lineas || []);
+  }
+}
+function pintarLineas(l) {
+  $("#editor").innerHTML = `<label class="et">Descripción (cada renglón es una línea de la tarjeta)</label>` +
+    l.map((x, i) => `<div class="linea"><input class="campo" data-l="${i}" value="${esc(x)}" maxlength="40"><button type="button" data-q="${i}" aria-label="Eliminar renglón">✕</button></div>`).join("") +
+    (l.length < 5 ? `<button type="button" class="link" id="masLinea">+ Agregar renglón</button>` : "");
+  document.querySelectorAll("[data-q]").forEach((b) => b.onclick = () => { const a = lineas(); a.splice(+b.dataset.q, 1); pintarLineas(a); });
+  $("#masLinea")?.addEventListener("click", () => { const a = lineas(); a.push(""); pintarLineas(a); });
+}
+const lineas = () => [...document.querySelectorAll("[data-l]")].map((i) => i.value.trim());
+$("#btnOtro").onclick = () => { st.prod = null; $("#zonaProd").hidden = true; $("#zonaBuscar").hidden = false; $("#buscar").focus(); };
+$("#btnLibre").onclick = () => { st.libre = true; $("#zonaBuscar").hidden = true; $("#zonaLibre").hidden = false; $("#libre").focus(); };
+$("#btnVolver").onclick = () => { st.libre = false; $("#zonaLibre").hidden = true; $("#zonaBuscar").hidden = false; };
+
+async function achicar(f) {
+  const bmp = await createImageBitmap(f);
+  const k = Math.min(1, 1400 / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas"); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  return c.toDataURL("image/jpeg", 0.82);
+}
+async function ponerFoto(input, img, txt) {
+  const f = input.files[0]; if (!f) return;
+  const d = await achicar(f).catch(() => null); if (!d) return;
+  st.fotos = [d]; img.src = d; img.hidden = false; txt.textContent = "Foto lista ✓ (tocá para cambiarla)";
+}
+$("#foto").onchange = (e) => ponerFoto(e.target, $("#fotoImg"), $("#fotoTxt"));
+$("#foto2").onchange = (e) => ponerFoto(e.target, $("#fotoImg2"), $("#fotoTxt2"));
+
+function error(t) { $("#error").textContent = t; $("#error").hidden = !t; }
+$("#form").onsubmit = async (e) => {
+  e.preventDefault(); error("");
+  if (!st.quien) return error("Elegí quién sos o escribí tu nombre.");
+  let est = null, texto = "";
+  if (st.libre || !st.prod) {
+    texto = $("#libre").value.trim();
+    if (!texto) return error(st.libre ? "Contá qué hay que cambiar." : "Buscá el producto o tocá «No lo encuentro: lo escribo».");
+  } else if (st.prod.campos) {
+    est = { modo: "producto", codigo: st.prod.codigo, foto_nueva: !!st.fotos.length, campos: {} };
+    document.querySelectorAll("#editor [data-k]").forEach((i) => { est.campos[i.dataset.k] = i.value.trim(); });
+    if (Object.keys(est.campos).every((k) => (st.prod.campos[k] || "") === est.campos[k]) && !st.fotos.length) return error("No cambiaste nada todavía.");
+  } else if (st.prod.tabla) {
+    est = { modo: "producto", codigo: st.prod.codigo, nuevo: false, foto_nueva: false, codigo_nuevo: "", tabla: {} };
+    document.querySelectorAll("#editor [data-k]").forEach((i) => { est.tabla[i.dataset.k] = i.value.trim(); });
+    if (Object.keys(est.tabla).every((k) => (st.prod.tabla[k] || "") === est.tabla[k])) return error("No cambiaste nada todavía.");
+  } else {
+    const l = lineas().filter(Boolean);
+    if (!l.length) return error("La descripción no puede quedar vacía.");
+    est = { modo: "producto", codigo: st.prod.codigo, nuevo: false, foto_nueva: !!st.fotos.length, codigo_nuevo: "", lineas: l,
+            eliminadas: (st.prod.lineas || []).filter((x) => !l.includes(x)) };
+    if (JSON.stringify(l) === JSON.stringify(st.prod.lineas || []) && !st.fotos.length) return error("No cambiaste nada todavía.");
+  }
+  $("#btnEnviar").disabled = true; $("#btnEnviar").textContent = "Guardando…";
+  try {
+    const r = await rpc("mc_enviar", { p_negocio: N, p_clave: K, p_nombre: st.quien, p_estructura: est, p_texto: texto, p_fotos: st.fotos });
+    if (!r?.ok) throw new Error(r?.error || "No se pudo guardar.");
+    try { localStorage.setItem("mc_quien", st.quien); } catch {}
+    $("#form").hidden = true; $("#listo").hidden = false; scrollTo({ top: 0 });
+  } catch (err) { error((err.message || "No se pudo guardar") + ". Probá de nuevo."); }
+  finally { $("#btnEnviar").disabled = false; $("#btnEnviar").textContent = "Enviar pedido"; }
+};
+$("#btnNuevo").onclick = () => location.reload();
+</script>
+</body>
+</html>
