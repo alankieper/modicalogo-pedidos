@@ -4,261 +4,274 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#1F3A8F">
+<meta name="theme-color" content="#1A4588">
 <title>Pedido de cambio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
 <style>
+/* El mismo diseño que el link de la compu (pedir.html): las tipografías y el logo llegan desde la nube */
 :root {
-  --c: #1F3A8F;            /* color de la marca (lo pisa la nube) */
-  --ac: var(--c);          /* acento: si la marca no tiene, el mismo color */
-  --tinta: #0F1729; --suave: #5B6478; --tenue: #8A93A6;
-  --borde: #E4E8F0; --fondo: #F5F7FB; --blanco: #fff;
-  --rojo: #C9302C; --verde: #12945A;
-  --r: 18px;
-  --sombra: 0 1px 1px rgba(15,23,41,.03), 0 2px 6px rgba(15,23,41,.04), 0 18px 40px -12px rgba(15,23,41,.12);
-  --ease: cubic-bezier(.2,.8,.2,1);
+  --azul: #1A4588; --azul-tx: #0B4EA0; --azul-claro: #E8EEF8; --tinta: #14213D; --gris: #5B6478; --gris-cod: #939598;
+  --borde: #DCE3EF; --fondo: #F3F6FB; --blanco: #fff; --verde: #12805C; --verde-claro: #E3F4EC;
+  --rojo: #C0392B; --rojo-claro: #FBEAEA; --ambar: #9A5B00; --ambar-claro: #FFF3DC;
+  --boton: var(--azul);
 }
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; min-height: 100dvh; background: var(--fondo); color: var(--tinta);
-  font: 16px/1.5 "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
-button, input, textarea, select { font: inherit; color: inherit; }
-button { cursor: pointer; }
-svg.i { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.col { width: 100%; max-width: 580px; margin-inline: auto; padding-inline: 16px; }
-
-/* ---------- cabecera ---------- */
-.cab { position: relative; overflow: hidden; color: #fff; background: var(--c);
-  padding: calc(22px + env(safe-area-inset-top)) 0 84px; }
-.cab::before { content: ""; position: absolute; inset: 0;
-  background:
-    radial-gradient(60% 120% at 100% 0%, rgba(255,255,255,.22), transparent 60%),
-    radial-gradient(50% 90% at 0% 100%, rgba(0,0,0,.28), transparent 70%); }
-.cab::after { content: ""; position: absolute; inset: 0; opacity: .5;
-  background-image: radial-gradient(rgba(255,255,255,.16) 1px, transparent 1px); background-size: 18px 18px;
-  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 85%); mask-image: linear-gradient(to bottom, #000, transparent 85%); }
-.cab .col { position: relative; z-index: 1; }
-.marca { display: flex; align-items: center; gap: 10px; }
-.mono { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; font-weight: 800; font-size: 17px;
-  background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.28); backdrop-filter: blur(6px); }
-.marca b { font-size: 15px; font-weight: 700; letter-spacing: .1px; }
-.marca small { display: block; font-size: 12px; opacity: .72; font-weight: 500; }
-.cab h1 { margin: 26px 0 6px; font-size: clamp(28px, 6vw, 36px); line-height: 1.08; letter-spacing: -.8px; font-weight: 800; }
-.cab p { margin: 0; max-width: 440px; font-size: 15.5px; opacity: .82; }
-
-/* ---------- cuerpo ---------- */
-main { margin-top: -56px; position: relative; z-index: 2; padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
-.tarjeta { background: var(--blanco); border-radius: var(--r); padding: 22px; margin-bottom: 12px; box-shadow: var(--sombra);
-  border: 1px solid rgba(15,23,41,.04); animation: entra .5s var(--ease) both; }
-.tarjeta:nth-of-type(2) { animation-delay: .06s; } .tarjeta:nth-of-type(3) { animation-delay: .12s; }
-@keyframes entra { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-
-.estado { display: flex; gap: 12px; align-items: center; padding: 14px 16px; margin-bottom: 12px; border-radius: 14px;
-  background: var(--blanco); box-shadow: var(--sombra); font-size: 14px; color: var(--suave); animation: entra .5s var(--ease) both; }
-.estado .ic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; flex: none;
-  background: color-mix(in srgb, var(--c) 9%, white); color: var(--c); }
-.estado b { display: block; color: var(--tinta); font-weight: 700; font-size: 14.5px; }
-
-.paso { display: flex; align-items: center; gap: 12px; margin: 0 0 16px; font-size: 17px; font-weight: 700; letter-spacing: -.2px; }
-.paso .n { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; font-size: 13px; font-weight: 800;
-  background: var(--c); color: #fff; }
-.paso small { display: block; font-size: 13px; color: var(--tenue); font-weight: 500; letter-spacing: 0; }
-
-.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
-.chips:empty { display: none; }
-.chip { min-height: 44px; border: 1px solid var(--borde); background: var(--blanco); border-radius: 12px; padding: 0 16px;
-  font-weight: 600; font-size: 14.5px; display: inline-flex; align-items: center; gap: 8px;
-  transition: border-color .15s, background .15s, color .15s, transform .1s; }
-.chip:hover { border-color: color-mix(in srgb, var(--c) 40%, var(--borde)); }
-.chip:active { transform: scale(.97); }
-.chip[aria-pressed=true] { background: color-mix(in srgb, var(--c) 8%, white); border-color: var(--c); color: var(--c); }
-.chip .av { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; font-size: 11px; font-weight: 800;
-  background: color-mix(in srgb, var(--c) 12%, white); color: var(--c); }
-.chip[aria-pressed=true] .av { background: var(--c); color: #fff; }
-
-.caja { position: relative; }
-.caja svg.i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--tenue); pointer-events: none; }
-.caja .campo { padding-left: 44px; }
-.campo { width: 100%; min-height: 50px; border: 1px solid var(--borde); border-radius: 12px; padding: 12px 14px; background: #FAFBFD;
-  font-size: 16px; transition: border-color .15s, box-shadow .15s, background .15s; }
-.campo::placeholder { color: var(--tenue); }
-.campo:hover { border-color: #D3D9E4; }
-.campo:focus { outline: none; border-color: var(--c); background: var(--blanco); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 13%, transparent); }
-textarea.campo { resize: vertical; min-height: 104px; line-height: 1.45; }
-label.et { display: block; font-weight: 600; font-size: 13px; color: var(--suave); margin: 16px 0 6px; }
-
-.res { display: flex; flex-direction: column; margin-top: 10px; border-radius: 14px; overflow: hidden; }
-.res:not(:empty) { border: 1px solid var(--borde); }
-.res button { display: flex; align-items: center; gap: 12px; text-align: left; border: 0; border-bottom: 1px solid var(--borde);
-  background: var(--blanco); padding: 13px 14px; min-height: 56px; transition: background .12s; }
-.res button:last-child { border-bottom: 0; }
-.res button:hover, .res button:focus-visible { background: color-mix(in srgb, var(--c) 5%, white); outline: none; }
-.res button span { flex: 1; min-width: 0; }
-.res button b { display: block; font-weight: 700; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.res button small { display: block; color: var(--tenue); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.res button svg.i { color: var(--tenue); width: 18px; height: 18px; }
-.res .nada { padding: 16px; font-size: 14px; color: var(--suave); background: #FAFBFD; }
-
-.elegido { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 14px;
-  background: color-mix(in srgb, var(--c) 6%, white); border: 1px solid color-mix(in srgb, var(--c) 18%, white); }
-.elegido .ic { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; background: var(--c); color: #fff; flex: none; }
-.elegido span { flex: 1; min-width: 0; }
-.elegido b { display: block; font-weight: 700; }
-.elegido small { color: var(--suave); font-size: 13px; }
-
-.link { background: none; border: 0; color: var(--c); font-weight: 600; padding: 10px 2px; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
-.link:hover { text-decoration: underline; text-underline-offset: 3px; }
-.link svg.i { width: 16px; height: 16px; }
-.boton-sec { border: 1px solid var(--borde); background: var(--blanco); border-radius: 10px; padding: 0 12px; min-height: 38px; font-size: 13.5px; font-weight: 600; color: var(--c); }
-
-.linea { display: flex; gap: 8px; margin-top: 8px; }
-.linea .campo { flex: 1; }
-.linea button { width: 50px; border: 1px solid var(--borde); background: var(--blanco); border-radius: 12px; color: var(--tenue); display: grid; place-items: center; transition: color .15s, border-color .15s; }
-.linea button:hover { color: var(--rojo); border-color: color-mix(in srgb, var(--rojo) 35%, var(--borde)); }
-
-.foto { display: flex; align-items: center; gap: 14px; border: 1.5px dashed #CBD2DE; border-radius: 14px; padding: 14px; margin-top: 16px;
-  cursor: pointer; transition: border-color .15s, background .15s; background: #FAFBFD; }
-.foto:hover { border-color: var(--c); background: color-mix(in srgb, var(--c) 4%, white); }
-.foto .ic { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--blanco); color: var(--c); box-shadow: var(--sombra); flex: none; }
-.foto img { width: 48px; height: 48px; object-fit: cover; border-radius: 12px; flex: none; }
-.foto b { display: block; font-size: 14.5px; font-weight: 700; }
-.foto small { color: var(--tenue); font-size: 13px; }
-
-/* ---------- botón de enviar fijo abajo ---------- */
-.pie { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; padding: 14px 0 calc(14px + env(safe-area-inset-bottom));
-  background: linear-gradient(to top, var(--fondo) 62%, color-mix(in srgb, var(--fondo) 0%, transparent)); }
-.enviar { width: 100%; height: 56px; border: 0; border-radius: 15px; background: var(--ac); color: #fff; font-weight: 700; font-size: 16.5px;
-  display: flex; align-items: center; justify-content: center; gap: 10px; letter-spacing: .1px;
-  box-shadow: 0 1px 0 rgba(255,255,255,.18) inset, 0 12px 28px -8px color-mix(in srgb, var(--ac) 65%, transparent);
-  transition: transform .12s var(--ease), filter .15s, opacity .15s; }
-.enviar:hover { filter: brightness(1.06); }
-.enviar:active { transform: scale(.985); }
-.enviar:disabled { opacity: .7; cursor: default; }
-.enviar .giro { width: 18px; height: 18px; border-radius: 50%; border: 2.5px solid rgba(255,255,255,.35); border-top-color: #fff; animation: gira .8s linear infinite; }
-.error { display: flex; gap: 10px; align-items: center; color: var(--rojo); background: #FDF1F0; border: 1px solid #F5D2CF; border-radius: 12px;
-  font-weight: 600; font-size: 14px; padding: 12px 14px; margin: 0 0 10px; animation: entra .3s var(--ease) both; }
-
-/* ---------- cargando ---------- */
-.cargando { text-align: center; padding: 34px 22px 30px; }
-.cargando .anillo { width: 44px; height: 44px; margin: 0 auto 16px; border-radius: 50%;
-  border: 3px solid color-mix(in srgb, var(--c) 14%, white); border-top-color: var(--c); animation: gira .9s linear infinite; }
-.cargando b { display: block; font-size: 16px; font-weight: 700; }
-.cargando small { color: var(--tenue); font-size: 14px; }
-.esq { height: 116px; border-radius: var(--r); margin-bottom: 12px; background: linear-gradient(90deg, #ECEFF5 25%, #F6F8FB 45%, #ECEFF5 65%);
-  background-size: 300% 100%; animation: brillo 1.4s ease-in-out infinite; }
-@keyframes gira { to { transform: rotate(360deg); } }
-@keyframes brillo { from { background-position: 100% 0; } to { background-position: 0 0; } }
-
-/* ---------- listo ---------- */
-.listo { text-align: center; padding: 40px 24px 28px; }
-.listo .ok { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 18px; display: grid; place-items: center; color: #fff;
-  background: var(--verde); box-shadow: 0 0 0 10px color-mix(in srgb, var(--verde) 12%, transparent); animation: pop .5s var(--ease) both; }
-.listo .ok svg { width: 34px; height: 34px; stroke-width: 3; stroke-dasharray: 30; stroke-dashoffset: 30; animation: trazo .45s .2s var(--ease) forwards; }
-.listo h2 { margin: 0 0 6px; font-size: 23px; letter-spacing: -.4px; }
-.listo p { margin: 0 auto 18px; color: var(--suave); max-width: 360px; }
-@keyframes pop { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
-@keyframes trazo { to { stroke-dashoffset: 0; } }
-
-.malo { text-align: center; padding: 34px 24px; }
-.malo .ic { width: 52px; height: 52px; border-radius: 14px; margin: 0 auto 14px; display: grid; place-items: center; background: #FDF1F0; color: var(--rojo); }
-.malo b { display: block; font-size: 18px; margin-bottom: 4px; }
-.malo p { margin: 0; color: var(--suave); }
-
-.firma { text-align: center; font-size: 12px; color: var(--tenue); margin-top: 22px; }
-.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 [hidden] { display: none !important; }
-:focus-visible { outline: 3px solid color-mix(in srgb, var(--c) 45%, transparent); outline-offset: 2px; }
-@media (min-width: 640px) { .tarjeta { padding: 26px 28px; } .cab { padding-top: 30px; } }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition: none !important; } }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; font-family: "MarcaTexto", system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--fondo); color: var(--tinta); font-size: 16px; line-height: 1.5; }
+button, input, textarea, select { font: inherit; color: inherit; }
+svg.i { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* encabezado como los flyers: color de marca, flecha, logo centrado, título y la curva gris y blanca */
+.cab { position: relative; overflow: hidden; color: #fff; text-align: center;
+  background: radial-gradient(120% 90% at 85% 0%, color-mix(in srgb, var(--azul) 82%, white) 0%, var(--azul) 55%, color-mix(in srgb, var(--azul) 78%, black) 100%);
+  padding: calc(26px + env(safe-area-inset-top)) 22px 92px; }
+.cab-flecha { position: absolute; left: max(20px, calc(50% - 520px)); top: calc(24px + env(safe-area-inset-top)); width: 86px; opacity: .18; pointer-events: none; }
+.cab-lineas { position: absolute; left: 0; top: 34%; width: 100%; height: 52%; opacity: .2; pointer-events: none; }
+.cab-lineas path { vector-effect: non-scaling-stroke; }
+.cab-logo { position: relative; display: block; height: 46px; max-width: 70%; object-fit: contain; margin: 0 auto; }
+.cab-logo[src=""] { visibility: hidden; }
+.cab-chip { position: relative; display: inline-block; margin-top: 18px; padding: 5px 14px; border-radius: 99px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22);
+  font: 700 11.5px/1.2 "MarcaTexto", sans-serif; letter-spacing: 1.6px; text-transform: uppercase; color: rgba(255,255,255,.92); }
+.cab h1 { position: relative; max-width: 560px; margin: 12px auto 8px; font: 700 40px/0.95 "MarcaTitulo", "MarcaTexto", sans-serif; font-style: italic; text-transform: uppercase; letter-spacing: .5px;
+  text-shadow: 0 2px 14px rgba(8,22,48,.25); }
+.cab p { position: relative; max-width: 420px; margin: 0 auto; color: rgba(255,255,255,.82); font-size: 15px; line-height: 1.45; }
+.cab-onda { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 64px; display: block; }
+
+main { max-width: 560px; margin: -40px auto 0; padding: 0 16px 8px; position: relative; }
+.pie { text-align: center; padding: 18px 16px calc(28px + env(safe-area-inset-bottom)); color: #8A95A8; font: 500 13px "MarcaTexto", sans-serif; letter-spacing: .4px; }
+.tarjeta { background: var(--blanco); border-radius: 22px; box-shadow: 0 1px 2px rgba(20,33,61,.05), 0 12px 32px rgba(20,33,61,.09); border: 1px solid rgba(26,69,136,.06); padding: 22px 20px; margin-bottom: 16px; }
+.paso { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 17px; letter-spacing: .1px; margin: 0 0 14px; color: var(--azul); }
+.paso .n { font: 700 34px/0.9 "MarcaTitulo", "MarcaTexto", sans-serif; font-style: italic; color: color-mix(in srgb, var(--azul) 40%, white); flex: none; min-width: 22px; text-align: center; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { appearance: none; border: 1.5px solid var(--borde); background: var(--blanco); color: var(--tinta); font-size: 15px; font-weight: 600; padding: 10px 14px; min-height: 44px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.chip[aria-pressed="true"] { background: var(--azul); border-color: var(--azul); color: #fff; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, label:focus-within { outline: 3px solid color-mix(in srgb, var(--azul) 35%, transparent); outline-offset: 2px; }
+
+input.campo, textarea.campo { width: 100%; font-size: 16px; color: var(--tinta); background: var(--fondo); border: 1.5px solid var(--borde); border-radius: 12px; padding: 12px 14px; min-height: 48px; }
+input.campo:focus, textarea.campo:focus { border-color: var(--azul); background: #fff; outline: none; }
+textarea.campo { resize: vertical; min-height: 100px; }
+.caja { position: relative; }
+.caja svg.i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--gris); pointer-events: none; }
+.caja .campo { padding-left: 44px; }
+
+.buscar-res { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 4px; }
+.buscar-res button { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 10px 12px; border: 1px solid #E1E6EF; border-radius: 12px; background: #fff; text-align: left; cursor: pointer; }
+.buscar-res button:hover, .buscar-res button:focus-visible { border-color: var(--azul); background: #F7FAFF; outline: none; }
+.buscar-res b { font-size: 15px; color: var(--azul-tx); }
+.buscar-res small { font-size: 12.5px; color: #6B7488; }
+.buscar-res .nada { font-size: 14px; color: var(--gris); padding: 6px 2px; }
+.mini-link { display: block; margin: 12px auto 0; border: 0; background: none; color: var(--gris); font: 600 13px "MarcaTexto", sans-serif; text-decoration: underline; cursor: pointer; padding: 6px 10px; }
+
+/* tarjeta igual a la del catálogo */
+.cat { font-family: "Roboto Condensed", "Arial Narrow", sans-serif; position: relative; max-width: 330px; margin: 4px auto 0; border: 2px dashed #A9BCD9; border-radius: 18px; padding: 12px 14px 16px; background: #fff; }
+.cat-cab { display: flex; align-items: center; gap: 10px; }
+.cat-cab span { color: var(--azul-tx); font-weight: 700; font-size: 20px; letter-spacing: .3px; }
+.cat-cab b { flex: 1; min-width: 0; text-align: right; font: 700 22px "Roboto Condensed", sans-serif; color: var(--gris-cod); border-bottom: 1.5px dashed #C3CEDF; padding: 2px 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cat-nombre { text-align: center; color: var(--tinta); font: 600 14px "MarcaTexto", sans-serif; margin: 8px 0 0; }
+.cat-foto { position: relative; display: grid; place-items: center; height: 170px; margin: 12px 0 6px; border-radius: 12px; cursor: pointer; overflow: hidden; background: #fff; }
+.cat-foto img { max-width: 92%; max-height: 92%; object-fit: contain; }
+.cat-foto .vacia { display: flex; flex-direction: column; align-items: center; gap: 6px; color: #8C99AE; font: 600 14px "MarcaTexto", sans-serif; text-align: center; padding: 0 20px; border: 2px dashed #C9D3E1; border-radius: 12px; width: 100%; height: 100%; justify-content: center; }
+.cat-foto .vacia svg { width: 34px; height: 34px; }
+.cat-foto .cambiar { position: absolute; right: 8px; bottom: 8px; display: inline-flex; align-items: center; gap: 6px; background: rgba(20,33,61,.78); color: #fff; font: 600 13px "MarcaTexto", sans-serif; padding: 6px 10px; border-radius: 999px; }
+.cat-foto .cambiar svg { width: 16px; height: 16px; }
+.cat-foto .nueva { position: absolute; left: 8px; top: 8px; background: var(--verde); color: #fff; font: 700 12px "MarcaTexto", sans-serif; padding: 3px 9px; border-radius: 999px; }
+.cat-sombra { height: 5px; margin: 4px 8% 14px; border-radius: 50%; background: radial-gradient(ellipse at center, rgba(0,0,0,.28), rgba(0,0,0,0) 70%); }
+.cat-desc { text-align: center; color: var(--azul-tx); font-weight: 700; font-size: 20px; margin-bottom: 4px; }
+.cat-linea { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.cat-linea input { flex: 1 1 100%; min-width: 0; text-align: center; font: 400 19px "Roboto Condensed", sans-serif; color: #231F20; border: 0; border-bottom: 1px solid #231F20; padding: 6px 4px 3px; background: transparent; border-radius: 0; }
+.cat-linea input::placeholder { color: #C2C8D2; }
+.cat-linea input:focus { outline: none; border-bottom: 2px solid var(--azul); background: #F7FAFF; }
+.cat-linea .elim { flex: none; margin: 4px 0 6px auto; display: inline-flex; align-items: center; gap: 4px; height: 30px; padding: 0 10px; border: 1px solid #F3C9C9; border-radius: 99px; background: #FFF5F5; color: #C0392B; font: 600 12.5px "MarcaTexto", sans-serif; cursor: pointer; white-space: nowrap; }
+.cat-linea .elim svg { width: 14px; height: 14px; }
+.cat-mas { display: block; margin: 10px auto 0; border: 0; background: none; color: var(--azul); font: 600 14px "MarcaTexto", sans-serif; cursor: pointer; padding: 6px 10px; }
+.cat-campos { padding: 4px 2px 6px; }
+.cat-campos label, .cat-tabla label { display: block; color: var(--azul-tx); font-weight: 700; font-size: 13.5px; margin: 12px 0 4px; font-family: "MarcaTexto", sans-serif; }
+.cat-campos input, .cat-campos textarea { width: 100%; font: 400 16px "MarcaTexto", system-ui, sans-serif; border: 1px solid #D9DFEA; border-radius: 12px; padding: 10px 12px; background: #fff; resize: vertical; }
+.cat-campos input:focus, .cat-campos textarea:focus { outline: none; border-color: var(--azul); box-shadow: 0 0 0 4px color-mix(in srgb, var(--azul) 14%, transparent); }
+.cat-tabla label { text-align: center; font-size: 15px; margin: 10px 0 2px; }
+.cat-tabla input { width: 100%; text-align: center; font: 400 19px "Roboto Condensed", sans-serif; border: 0; border-bottom: 1px solid #231F20; padding: 4px; background: transparent; border-radius: 0; }
+.cat-tabla input:focus { outline: none; border-bottom: 2px solid var(--azul); background: #F7FAFF; }
+
+.estado-prod { display: flex; align-items: center; gap: 8px; margin: 12px auto 0; max-width: 330px; padding: 10px 12px; border-radius: 12px; font-size: 14px; }
+.estado-prod.ok { background: var(--verde-claro); color: var(--verde); }
+.estado-prod.buscando { background: var(--fondo); color: var(--gris); }
+.aviso-nube { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 16px; padding: 12px 14px; border-radius: 16px; background: var(--blanco); border: 1px solid rgba(26,69,136,.08);
+  box-shadow: 0 1px 2px rgba(20,33,61,.05), 0 12px 32px rgba(20,33,61,.06); font-size: 14px; color: var(--gris); }
+.aviso-nube .ic { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; flex: none; background: var(--azul-claro); color: var(--azul); }
+.aviso-nube b { display: block; color: var(--tinta); }
+
+.btn { appearance: none; border: 0; font-weight: 700; font-size: 17px; border-radius: 14px; min-height: 54px; padding: 0 20px; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.btn-primario { background: var(--boton); color: #fff; box-shadow: 0 6px 18px color-mix(in srgb, var(--boton) 32%, transparent); }
+.btn-primario:disabled { opacity: .6; }
+.error { background: var(--rojo-claro); color: var(--rojo); border-radius: 12px; padding: 12px 14px; font-size: 15px; font-weight: 600; margin: 0 0 12px; }
+.listo { text-align: center; padding: 28px 20px; }
+.listo .ok { width: 72px; height: 72px; border-radius: 50%; background: var(--verde-claro); color: var(--verde); display: grid; place-items: center; margin: 0 auto 14px; }
+.listo .ok svg { width: 38px; height: 38px; stroke-width: 2.5; }
+.listo h2 { margin: 0 0 6px; font-size: 22px; }
+.listo p { margin: 0 0 18px; color: var(--gris); }
+.cargando { text-align: center; color: var(--gris); padding: 34px 20px; }
+.cargando svg { width: 30px; height: 30px; color: var(--azul); margin-bottom: 8px; }
+.malo { text-align: center; padding: 30px 20px; }
+.malo b { display: block; font-size: 18px; margin-bottom: 4px; }
+.malo p { margin: 0; color: var(--gris); }
+/* ================= tema "burbujas" (Todo Limpio): naranja del catálogo, burbujas de vidrio, tarjeta del catálogo ================= */
+body[data-tema="burbujas"] { --fondo: #F5F7FC; --naranja: var(--boton); background: var(--fondo); }
+[data-tema="burbujas"] .cab { background: linear-gradient(165deg, color-mix(in srgb, var(--naranja) 70%, #FFD24A) 0%, var(--naranja) 48%, color-mix(in srgb, var(--naranja) 80%, #C2410C) 100%);
+  padding-bottom: 104px; }
+[data-tema="burbujas"] .cab-flecha, [data-tema="burbujas"] .cab-lineas { display: none; }
+[data-tema="burbujas"] .cab-onda path:nth-child(1) { fill: rgba(255,255,255,.35); } [data-tema="burbujas"] .cab-onda path:nth-child(2) { opacity: .55; }
+[data-tema="burbujas"] .cab::before { content: ""; position: absolute; inset: -30%; pointer-events: none; filter: blur(42px);
+  background: radial-gradient(35% 35% at 25% 30%, rgba(255,226,150,.75), transparent 70%), radial-gradient(30% 30% at 80% 20%, rgba(255,140,60,.55), transparent 70%),
+              radial-gradient(40% 40% at 55% 85%, rgba(255,190,110,.5), transparent 70%); animation: aurora 18s ease-in-out infinite alternate; }
+@keyframes aurora { to { transform: translate3d(6%, 5%, 0) scale(1.12); } }
+.cab-burbujas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; display: none; }
+[data-tema="burbujas"] .cab-burbujas { display: block; }
+[data-tema="burbujas"] .cab-logo { height: 40px; filter: drop-shadow(0 4px 14px rgba(120,40,0,.25)); }
+[data-tema="burbujas"] .cab-chip { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.4); }
+[data-tema="burbujas"] .cab h1 { font-style: normal; font-size: 34px; line-height: 1.05; text-transform: none; letter-spacing: -.2px; text-shadow: 0 2px 16px rgba(140,50,0,.3); }
+[data-tema="burbujas"] .cab p { color: rgba(255,255,255,.92); }
+[data-tema="burbujas"] .tarjeta { border-radius: 26px; border-color: rgba(31,58,143,.06); box-shadow: 0 1px 2px rgba(31,58,143,.05), 0 18px 40px -18px rgba(31,58,143,.28); }
+[data-tema="burbujas"] .paso { font-family: "MarcaTitulo", sans-serif; font-size: 18px; color: var(--azul-tx); }
+[data-tema="burbujas"] .paso .n { width: 34px; height: 34px; min-width: 0; border-radius: 50%; display: grid; place-items: center; font: 700 15px "MarcaTitulo", sans-serif; font-style: normal; color: #fff;
+  background: radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--azul) 55%, white) 0%, var(--azul) 60%, color-mix(in srgb, var(--azul) 75%, black) 100%);
+  box-shadow: inset 0 -3px 6px rgba(0,0,0,.18), 0 6px 14px -6px color-mix(in srgb, var(--azul) 70%, transparent); position: relative; }
+[data-tema="burbujas"] .paso .n::after { content: ""; position: absolute; left: 7px; top: 5px; width: 9px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.75); transform: rotate(-35deg); }
+[data-tema="burbujas"] .chip[aria-pressed="true"] { background: var(--azul); border-color: var(--azul); }
+[data-tema="burbujas"] input.campo:focus, [data-tema="burbujas"] textarea.campo:focus { border-color: var(--naranja); box-shadow: 0 0 0 4px color-mix(in srgb, var(--naranja) 16%, transparent); }
+[data-tema="burbujas"] .aviso-nube .ic { background: color-mix(in srgb, var(--naranja) 14%, white); color: color-mix(in srgb, var(--naranja) 75%, black); }
+[data-tema="burbujas"] .btn-primario { background: linear-gradient(135deg, color-mix(in srgb, var(--naranja) 75%, #FFC53D) 0%, var(--naranja) 50%, color-mix(in srgb, var(--naranja) 85%, #C2410C) 100%);
+  box-shadow: 0 1px 0 rgba(255,255,255,.35) inset, 0 12px 26px -10px color-mix(in srgb, var(--naranja) 80%, transparent); border-radius: 18px; }
+/* burbujas tenues que suben por el fondo (las mismas de la web) */
+.burbujas { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; display: none; color: color-mix(in srgb, var(--naranja, #F39200) 20%, transparent); }
+[data-tema="burbujas"] .burbujas { display: block; }
+[data-tema="burbujas"] main, [data-tema="burbujas"] .pie { position: relative; z-index: 1; }
+.burbuja { position: absolute; bottom: -120px; border-radius: 50%; border: 2px solid currentColor; opacity: 0; animation: subir var(--dur, 26s) linear var(--delay, 0s) infinite; }
+.burbuja::after { content: ""; position: absolute; inset: 22%; border-radius: 50%; border: 2px solid transparent; border-right-color: currentColor; transform: rotate(20deg); }
+@keyframes subir { 0% { transform: translate3d(0,0,0); opacity: 0; } 8% { opacity: 1; } 50% { transform: translate3d(var(--deriva, 14px), -55vh, 0); } 92% { opacity: 1; } 100% { transform: translate3d(0, -115vh, 0); opacity: 0; } }
+/* la tarjeta igual a la del catálogo: foto, nombre azul, subtítulo en cursiva, descripción y el precio grande */
+[data-tema="burbujas"] .cat { font-family: "MarcaTexto", sans-serif; border: 0; border-radius: 22px; background: #fff; max-width: 360px;
+  box-shadow: 0 0 0 1px rgba(31,58,143,.07), 0 16px 34px -18px rgba(31,58,143,.35); padding: 14px 16px 18px; }
+[data-tema="burbujas"] .cat-cab { justify-content: flex-end; }
+[data-tema="burbujas"] .cat-cab span { display: none; }
+[data-tema="burbujas"] .cat-cab b { flex: none; font: 700 12px "MarcaTexto", sans-serif; color: var(--azul); background: var(--azul-claro); border: 0; border-radius: 99px; padding: 4px 10px; }
+[data-tema="burbujas"] .cat-foto .vacia { border-color: color-mix(in srgb, var(--naranja) 35%, white); color: color-mix(in srgb, var(--naranja) 70%, black); background: color-mix(in srgb, var(--naranja) 5%, white); }
+[data-tema="burbujas"] .cat-sombra { display: none; }
+.tc label { display: block; margin: 10px 0 2px; text-align: center; font: 600 10.5px "MarcaTexto", sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #9AA4BC; }
+.tc input, .tc textarea { width: 100%; text-align: center; border: 0; border-radius: 10px; background: transparent; padding: 4px 6px; color: #2B3550; font: 400 15px/1.4 "MarcaTexto", sans-serif; resize: none;
+  outline: 1.5px dashed transparent; transition: outline-color .15s, background .15s; }
+.tc input:hover, .tc textarea:hover { outline-color: #D5DCEB; }
+.tc input:focus, .tc textarea:focus { outline: 1.5px solid var(--naranja); background: color-mix(in srgb, var(--naranja) 5%, white); }
+.tc [data-rol="nombre"] { font: 700 23px/1.15 "MarcaTitulo", sans-serif; color: var(--azul-tx); }
+.tc [data-rol="subtitulo"] { font-style: italic; font-size: 15px; color: #3A4256; }
+.tc [data-rol="descripcion"] { font-size: 14.5px; }
+.tc .fila-precio { display: grid; grid-template-columns: 1.3fr 1fr; gap: 8px; align-items: end; margin-top: 6px; }
+.tc [data-rol="precio"] { font: 700 28px "MarcaTitulo", sans-serif; color: var(--azul-tx); }
+.tc [data-rol="presentacion"] { font-style: italic; font-size: 13px; color: #8A93A6; text-align: right; }
+.tc .fila-precio > div:last-child label { text-align: right; }
+.tc .fila-precio > div:first-child label { text-align: left; }
+.tc .fila-precio [data-rol="precio"] { text-align: left; }
+.gira { animation: gira 1s linear infinite; }
+@keyframes gira { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-buscar" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
-  <symbol id="i-flecha" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-cam" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-load" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
   <symbol id="i-nube" viewBox="0 0 24 24"><path d="M17.5 19H7a5 5 0 1 1 1.1-9.9A6 6 0 0 1 19.5 11 4 4 0 0 1 17.5 19Z"/><path d="m9.5 14.5 2 2 3.5-3.5"/></symbol>
-  <symbol id="i-camara" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
-  <symbol id="i-caja" viewBox="0 0 24 24"><path d="m3 7 9-4 9 4-9 4-9-4Z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></symbol>
-  <symbol id="i-lapiz" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></symbol>
-  <symbol id="i-volver" viewBox="0 0 24 24"><path d="M15 6 9 12l6 6"/></symbol>
-  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
-  <symbol id="i-mas" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
-  <symbol id="i-enviar" viewBox="0 0 24 24"><path d="M4 12 20 4l-6 16-3-7-7-1Z"/></symbol>
-  <symbol id="i-ok" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
-  <symbol id="i-alerta" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></symbol>
-</svg>
+</defs></svg>
 
+<div class="burbujas" id="burbujas" aria-hidden="true"></div>
 <header class="cab">
-  <div class="col">
-    <div class="marca"><div class="mono" id="mono" aria-hidden="true">C</div><div><b id="empresa">Catálogo</b><small>Pedidos de cambio</small></div></div>
-    <h1>¿Qué cambiamos<br>en el catálogo?</h1>
-    <p>Elegí el producto, corregí lo que haga falta y listo. Nosotros lo actualizamos.</p>
-  </div>
+  <svg class="cab-flecha" viewBox="0 0 280 170" aria-hidden="true"><path d="M0 2 L277 100 L95 166 L130 97 Z" fill="#fff"/></svg>
+  <svg class="cab-lineas" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true" fill="none" stroke="#fff" stroke-width="0.7"><path d="M-20 120 C 260 20, 560 190, 860 110 S 1260 30, 1460 90"/><path d="M-20 124 C 260 27, 560 185, 860 112 S 1260 36, 1460 94"/><path d="M-20 128 C 260 34, 560 180, 860 114 S 1260 42, 1460 98"/><path d="M-20 132 C 260 41, 560 175, 860 116 S 1260 48, 1460 102"/><path d="M-20 136 C 260 48, 560 170, 860 118 S 1260 54, 1460 106"/><path d="M-20 140 C 260 55, 560 165, 860 120 S 1260 60, 1460 110"/><path d="M-20 144 C 260 62, 560 160, 860 122 S 1260 66, 1460 114"/><path d="M-20 148 C 260 69, 560 155, 860 124 S 1260 72, 1460 118"/><path d="M-20 152 C 260 76, 560 150, 860 126 S 1260 78, 1460 122"/><path d="M-20 156 C 260 83, 560 145, 860 128 S 1260 84, 1460 126"/><path d="M-20 160 C 260 90, 560 140, 860 130 S 1260 90, 1460 130"/><path d="M-20 164 C 260 97, 560 135, 860 132 S 1260 96, 1460 134"/><path d="M-20 168 C 260 104, 560 130, 860 134 S 1260 102, 1460 138"/><path d="M-20 172 C 260 111, 560 125, 860 136 S 1260 108, 1460 142"/></svg>
+  <canvas class="cab-burbujas" id="cabBurbujas" aria-hidden="true"></canvas>
+  <img class="cab-logo" id="logo" src="" alt="">
+  <span class="cab-chip" id="chip">Catálogo</span>
+  <h1 id="titulo">Pedido de cambio</h1>
+  <p id="frase">Desde acá podés solicitar tus modificaciones para el catálogo.</p>
+  <svg class="cab-onda" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 64 C 360 6, 1080 6, 1440 64 L1440 120 L0 120 Z" fill="#C9CED6"/>
+    <path d="M0 78 C 360 22, 1080 22, 1440 78 L1440 120 L0 120 Z" fill="#fff" opacity=".9"/>
+    <path d="M0 90 C 360 36, 1080 36, 1440 90 L1440 120 L0 120 Z" fill="var(--fondo)"/>
+  </svg>
 </header>
 
-<main class="col">
-  <div id="cargando">
-    <div class="tarjeta cargando"><div class="anillo" aria-hidden="true"></div><b>Preparando el formulario</b><small>Un segundo…</small></div>
-    <div class="esq" aria-hidden="true"></div>
-  </div>
-  <div class="tarjeta malo" id="malo" hidden><div class="ic"><svg class="i"><use href="#i-alerta"/></svg></div><b>Este link no funciona</b><p>Pedile el link nuevo a quien arma el catálogo.</p></div>
+<main>
+  <section class="tarjeta cargando" id="cargando"><svg class="i gira"><use href="#i-load"/></svg><div>Preparando el formulario…</div></section>
+  <section class="tarjeta malo" id="malo" hidden><b>Este link no funciona</b><p>Pedile el link nuevo a quien arma el catálogo.</p></section>
 
-  <form id="form" hidden novalidate>
-    <div class="estado" id="avisoNube"><div class="ic"><svg class="i"><use href="#i-nube"/></svg></div>
-      <span><b>Tu pedido queda guardado</b>Lo recibimos aunque estemos desconectados y se aplica apenas volvemos.</span></div>
+  <form id="form" novalidate hidden>
+    <div class="aviso-nube"><span class="ic"><svg class="i"><use href="#i-nube"/></svg></span>
+      <span><b>Tu pedido queda guardado</b>La compu del catálogo está apagada: lo recibe apenas la prendan. No hace falta mandarlo de nuevo.</span></div>
 
-    <section class="tarjeta" aria-labelledby="t1">
-      <h2 class="paso" id="t1"><span class="n">1</span><span>¿Quién sos?<small>Así sabemos a quién avisarle</small></span></h2>
-      <div class="chips" id="equipo"></div>
-      <label class="sr" for="quien">Tu nombre</label>
-      <input class="campo" id="quien" placeholder="Escribí tu nombre" maxlength="40" autocomplete="name">
+    <section class="tarjeta">
+      <h2 class="paso"><span class="n">1</span>¿Quién sos?</h2>
+      <div class="chips" id="equipo" role="group" aria-label="Quién pide el cambio"></div>
+      <input class="campo" type="text" id="quien" placeholder="Tu nombre" maxlength="40" aria-label="Tu nombre" autocomplete="name">
     </section>
 
-    <section class="tarjeta" aria-labelledby="t2">
-      <h2 class="paso" id="t2"><span class="n">2</span><span>¿Qué producto?<small id="t2sub">Buscalo por nombre o código</small></span></h2>
+    <section class="tarjeta" id="secBuscar">
+      <h2 class="paso"><span class="n">2</span>¿Qué producto?</h2>
       <div id="zonaBuscar">
-        <div class="caja"><svg class="i"><use href="#i-buscar"/></svg>
-          <label class="sr" for="buscar">Buscar producto</label>
-          <input class="campo" id="buscar" type="search" placeholder="Ej: lavandina, TL120…" autocomplete="off" enterkeyhint="search"></div>
-        <div class="res" id="res" role="list"></div>
-        <button type="button" class="link" id="btnLibre"><svg class="i"><use href="#i-lapiz"/></svg>No lo encuentro, prefiero escribirlo</button>
-      </div>
-      <div id="zonaProd" hidden>
-        <div class="elegido"><div class="ic"><svg class="i"><use href="#i-caja"/></svg></div>
-          <span><b id="prodNombre"></b><small id="prodDet"></small></span>
-          <button type="button" class="boton-sec" id="btnOtro">Cambiar</button></div>
-        <div id="editor"></div>
-        <label class="foto"><span class="ic" id="fotoIc"><svg class="i"><use href="#i-camara"/></svg></span><img id="fotoImg" hidden alt="">
-          <span><b id="fotoTxt">Foto nueva</b><small id="fotoSub">Opcional · tocá para sacarla o subirla</small></span>
-          <input type="file" id="foto" accept="image/*" hidden></label>
+        <div class="caja"><svg class="i"><use href="#i-search"/></svg>
+          <input class="campo" id="buscar" type="search" placeholder="Nombre o código del producto" autocomplete="off" enterkeyhint="search" aria-label="Buscar producto"></div>
+        <div class="buscar-res" id="res"></div>
+        <button type="button" class="mini-link" id="btnLibre">No lo encuentro: lo escribo</button>
       </div>
       <div id="zonaLibre" hidden>
-        <label class="et" for="libre">Contanos qué hay que cambiar</label>
-        <textarea class="campo" id="libre" maxlength="2000" placeholder="Ej: el TL120 ahora viene en 5 litros"></textarea>
-        <label class="foto"><span class="ic" id="fotoIc2"><svg class="i"><use href="#i-camara"/></svg></span><img id="fotoImg2" hidden alt="">
-          <span><b id="fotoTxt2">Foto</b><small id="fotoSub2">Opcional · tocá para sacarla o subirla</small></span>
-          <input type="file" id="foto2" accept="image/*" hidden></label>
-        <button type="button" class="link" id="btnVolver"><svg class="i"><use href="#i-volver"/></svg>Volver a buscar el producto</button>
+        <textarea class="campo" id="libre" maxlength="2000" placeholder="Contá qué hay que cambiar (con el código si lo sabés)" aria-label="Qué hay que cambiar"></textarea>
+        <label class="cat-foto" style="height:130px" tabindex="0" aria-label="Foto (opcional)">
+          <input type="file" id="foto2" accept="image/*" hidden>
+          <span class="vacia" id="fotoVacia2"><svg class="i"><use href="#i-cam"/></svg>Foto (opcional): tocá para sacarla o subirla</span>
+          <img id="fotoImg2" alt="" hidden><span class="cambiar" id="fotoCambiar2" hidden><svg class="i"><use href="#i-cam"/></svg>Cambiar foto</span>
+        </label>
+        <button type="button" class="mini-link" id="btnVolver">Volver a buscar el producto</button>
       </div>
     </section>
-    <p class="firma">Los cambios se revisan antes de publicarse.</p>
 
-    <div class="pie"><div class="col">
-      <p class="error" id="error" role="alert" hidden></p>
-      <button class="enviar" id="btnEnviar" type="submit"><svg class="i"><use href="#i-enviar"/></svg><span>Enviar pedido</span></button>
-    </div></div>
+    <section class="tarjeta" id="secProducto" hidden>
+      <h2 class="paso"><span class="n">2</span>Completá la tarjeta</h2>
+      <div class="cat">
+        <div class="cat-cab"><span id="codEtiq">CÓDIGO</span><b id="prodCod"></b></div>
+        <div class="cat-nombre" id="prodNombre"></div>
+        <label class="cat-foto" tabindex="0" aria-label="Foto del producto">
+          <input type="file" id="foto" accept="image/*" hidden>
+          <span class="vacia" id="fotoVacia"><svg class="i"><use href="#i-cam"/></svg>¿Foto nueva? Tocá para sacarla o subirla</span>
+          <img id="fotoImg" alt="" hidden>
+          <span class="nueva" id="fotoNueva" hidden>Foto nueva</span>
+          <span class="cambiar" id="fotoCambiar" hidden><svg class="i"><use href="#i-cam"/></svg>Cambiar foto</span>
+        </label>
+        <div class="cat-sombra"></div>
+        <div id="editor"></div>
+      </div>
+      <div class="estado-prod ok" id="estadoProd"><svg class="i"><use href="#i-check"/></svg><span id="estadoTxt"></span></div>
+      <button type="button" class="mini-link" id="btnOtro">Elegir otro producto</button>
+    </section>
+
+    <div class="error" id="error" hidden></div>
+    <button type="submit" class="btn btn-primario" id="btnEnviar"><svg class="i"><use href="#i-send"/></svg><span id="txtEnviar">Enviar pedido</span></button>
   </form>
 
-  <div class="tarjeta listo" id="listo" hidden>
-    <div class="ok"><svg class="i"><use href="#i-ok"/></svg></div>
-    <h2>¡Pedido enviado!</h2>
-    <p id="listoTxt">Ya lo tenemos. Lo revisamos y aparece en el catálogo en la próxima actualización.</p>
-    <button class="boton-sec" id="btnNuevo">Mandar otro pedido</button>
-  </div>
+  <section class="tarjeta listo" id="listo" hidden>
+    <div class="ok"><svg class="i"><use href="#i-check"/></svg></div>
+    <h2>¡Pedido guardado!</h2>
+    <p id="listoTxt">Le llega apenas prendan la compu del catálogo.</p>
+    <button type="button" class="btn btn-primario" id="btnNuevo"><svg class="i"><use href="#i-plus"/></svg>Mandar otro pedido</button>
+  </section>
 </main>
+<footer class="pie" id="pie"></footer>
 <script>
 const SB = "https://apnyksshjsfrioqdiica.supabase.co", PUB = "sb_publishable_LwIINQKikHSxbYdfnw87Hw_psn-AOGV";
 const q = new URLSearchParams(location.search), N = q.get("n") || "", K = q.get("k") || "";
@@ -266,43 +279,107 @@ const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
 const esc = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const ic = (n) => `<svg class="i"><use href="#i-${n}"/></svg>`;
-const iniciales = (t) => String(t || "").replace(/\(.*?\)/g, "").replace(/[^\p{L}\s]/gu, "").trim().split(/\s+/).slice(0, 2).map((x) => x[0] || "").join("").toUpperCase();
-const st = { quien: "", prod: null, fotos: [], info: null, libre: false };
+const st = { quien: "", prod: null, fotos: [], info: null, libre: false, responsable: "" };
 
 async function rpc(fn, args) {
   const r = await fetch(`${SB}/rest/v1/rpc/${fn}`, { method: "POST", headers: { apikey: PUB, "Content-Type": "application/json" }, body: JSON.stringify(args) });
   if (!r.ok) throw new Error("rpc " + r.status);
   return r.json();
 }
+// burbujas tenues que suben por el fondo (CSS, como la web de la marca)
+function burbujasFondo() {
+  const c = $("#burbujas"); if (c.childElementCount) return;
+  for (let i = 0; i < 12; i++) {
+    const b = document.createElement("i"), t = 18 + Math.random() * 46;
+    b.className = "burbuja";
+    b.style.cssText = `width:${t}px;height:${t}px;left:${Math.random() * 96}%;--dur:${18 + Math.random() * 16}s;--delay:${-Math.random() * 30}s;--deriva:${(Math.random() * 40 - 20).toFixed(0)}px`;
+    c.appendChild(b);
+  }
+}
+// burbujas de vidrio en la cabecera: suben, se mueven de lado y explotan (también al tocarlas)
+function burbujasCabecera(cv) {
+  const ctx = cv.getContext("2d"), quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W = 0, H = 0, raf = 0, bs = [], chispas = [], anillos = [];
+  const medir = () => { const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio || 1, 2); W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); };
+  const nueva = (ini) => { const r = 6 + Math.random() * (W > 700 ? 26 : 18);
+    return { x: Math.random() * W, y: ini ? Math.random() * H : H + r + Math.random() * 40, r, v: .25 + Math.random() * .5, f: Math.random() * 6.3, a: .3 + Math.random() * .8, e: H * (.05 + Math.random() * .5), t: Math.random() * 360 }; };
+  const reventar = (b) => { anillos.push({ x: b.x, y: b.y, r: b.r, vida: 1 });
+    for (let i = 0, n = 7 + Math.floor(Math.random() * 5); i < n; i++) { const a = i / n * 6.28 + Math.random() * .4, v = 1.1 + Math.random() * 2;
+      chispas.push({ x: b.x + Math.cos(a) * b.r * .8, y: b.y + Math.sin(a) * b.r * .8, vx: Math.cos(a) * v, vy: Math.sin(a) * v - .4, r: 1.1 + Math.random() * 2, vida: 1 }); } };
+  const dibujar = ({ x, y, r, t }) => {
+    const g = ctx.createRadialGradient(x - r * .3, y - r * .35, r * .1, x, y, r);
+    g.addColorStop(0, "rgba(255,255,255,.35)"); g.addColorStop(.45, "rgba(255,255,255,.06)"); g.addColorStop(.82, "rgba(255,255,255,.14)"); g.addColorStop(1, "rgba(255,255,255,.55)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283); ctx.fill();
+    const l = ctx.createLinearGradient(x - r, y - r, x + r, y + r);
+    l.addColorStop(0, `hsla(${t},90%,85%,.55)`); l.addColorStop(.5, `hsla(${(t + 120) % 360},90%,85%,.25)`); l.addColorStop(1, `hsla(${(t + 240) % 360},90%,85%,.5)`);
+    ctx.strokeStyle = l; ctx.lineWidth = Math.max(1, r * .06); ctx.beginPath(); ctx.arc(x, y, r - ctx.lineWidth / 2, 0, 6.283); ctx.stroke();
+    ctx.fillStyle = "rgba(255,255,255,.85)"; ctx.beginPath(); ctx.ellipse(x - r * .38, y - r * .42, r * .22, r * .12, -.7, 0, 6.283); ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,.7)"; ctx.lineWidth = Math.max(1, r * .07); ctx.beginPath(); ctx.arc(x, y, r * .62, -.35, .75); ctx.stroke();
+  };
+  const cuadro = () => {
+    ctx.clearRect(0, 0, W, H);
+    bs.forEach((b, i) => { b.f += .018; b.y -= b.v; b.x += Math.sin(b.f) * b.a * .35; if (b.y < b.e) { reventar(b); bs[i] = nueva(false); } else dibujar(b); });
+    anillos = anillos.filter((a) => (a.vida -= .06) > 0);
+    anillos.forEach((a) => { ctx.strokeStyle = `rgba(255,255,255,${a.vida * .8})`; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(a.x, a.y, a.r * (1 + (1 - a.vida) * .9), 0, 6.283); ctx.stroke(); });
+    chispas = chispas.filter((c) => (c.vida -= .035) > 0);
+    chispas.forEach((c) => { c.x += c.vx; c.y += c.vy; c.vy += .06; ctx.fillStyle = `rgba(255,255,255,${c.vida * .9})`; ctx.beginPath(); ctx.arc(c.x, c.y, c.r * c.vida, 0, 6.283); ctx.fill(); });
+    raf = requestAnimationFrame(cuadro);
+  };
+  const iniciar = () => { medir(); bs = Array.from({ length: W > 700 ? 18 : 11 }, () => nueva(true)); cancelAnimationFrame(raf);
+    if (quieto) { ctx.clearRect(0, 0, W, H); bs.forEach(dibujar); } else raf = requestAnimationFrame(cuadro); };
+  iniciar();
+  let t; addEventListener("resize", () => { clearTimeout(t); t = setTimeout(iniciar, 150); });
+  cv.parentElement.addEventListener("pointerdown", (e) => { const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
+    const i = bs.findIndex((b) => Math.hypot(b.x - px, b.y - py) < b.r + 10); if (i >= 0) { reventar(bs[i]); bs[i] = nueva(false); } });
+  document.addEventListener("visibilitychange", () => { cancelAnimationFrame(raf); if (!document.hidden && !quieto) raf = requestAnimationFrame(cuadro); });
+}
 function conTiempo(ms) { const c = new AbortController(); setTimeout(() => c.abort(), ms); return c.signal; }
+
+function ponerMarca(I, nombre) {
+  const M = I.marca || {}, R = document.documentElement.style;
+  if (I.color) { R.setProperty("--azul", I.color); document.querySelector('meta[name="theme-color"]').content = I.color; }
+  if (M.color_titulos) R.setProperty("--azul-tx", M.color_titulos);
+  if (I.acento) R.setProperty("--boton", I.acento);
+  const css = (Array.isArray(M.fuentes) ? M.fuentes : []).slice().sort((a, b) => !!a.rango - !!b.rango).map((f) =>
+    `@font-face{font-family:"${f.familia}";src:url(${f.src}) format("woff2");font-weight:${f.peso};font-display:swap${f.rango ? `;unicode-range:${f.rango}` : ""}}`);
+  if (css.length) { const s = document.createElement("style"); s.textContent = css.join("\n"); document.head.appendChild(s); }
+  document.body.dataset.tema = M.tema || "flyer";
+  if (M.frase) $("#frase").textContent = M.frase;
+  if (M.tema === "burbujas") { burbujasFondo(); burbujasCabecera($("#cabBurbujas")); }
+  const empresa = I.empresa || nombre;
+  if (M.logo) { $("#logo").src = M.logo; $("#logo").alt = empresa; }
+  $("#chip").textContent = M.chip || `Catálogo ${empresa}`;
+  if (M.titulo) $("#titulo").textContent = M.titulo;
+  if (M.columna_codigo) $("#codEtiq").textContent = M.columna_codigo;
+  st.responsable = I.responsable || "";
+  $("#pie").textContent = M.web || "";
+  document.title = `${M.titulo || "Pedido de cambio"} · ${empresa}`;
+}
 
 (async function () {
   let d;
   try { d = await rpc("mc_info", { p_negocio: N, p_clave: K }); } catch { d = null; }
   if (!d?.ok) { $("#cargando").hidden = true; $("#malo").hidden = false; return; }
   st.info = d.info || {};
-  const I = st.info, empresa = I.empresa || d.nombre;
-  document.title = `Pedido de cambio · ${empresa}`;
-  if (I.color) {
-    document.documentElement.style.setProperty("--c", I.color);
-    document.querySelector('meta[name="theme-color"]').content = I.color;
-  }
-  if (I.acento) document.documentElement.style.setProperty("--ac", I.acento);
-  $("#empresa").textContent = empresa;
-  $("#mono").textContent = iniciales(empresa) || "C";
+  const I = st.info;
+  ponerMarca(I, d.nombre);
   // ¿la compu está prendida? entonces al link completo (con fotos, ortografía y la tarjeta tal cual)
-  if (I.link) {
+  if (I.link && !q.has("nube")) {   // ?nube=1 muestra esta página aunque la compu esté prendida
     try {
       const v = await fetch(`${I.link}vivo?k=${encodeURIComponent(K)}`, { signal: conTiempo(4000) });
       const j = v.ok ? await v.json() : null;
       if (j?.ok) { location.replace(`${I.link}?k=${encodeURIComponent(K)}`); return; }
     } catch { /* apagada: seguimos acá */ }
   }
-  $("#equipo").innerHTML = (I.equipo || []).map((n) => `<button type="button" class="chip" data-n="${esc(n)}" aria-pressed="false"><span class="av">${esc(iniciales(n))}</span>${esc(n)}</button>`).join("");
+  if (st.responsable) {
+    $("#txtEnviar").textContent = `Enviar a ${st.responsable}`;
+    $("#listoTxt").textContent = `Le llega a ${st.responsable} apenas prenda la compu del catálogo.`;
+  }
+  $("#equipo").innerHTML = (I.equipo || []).map((n) => `<button type="button" class="chip" data-n="${esc(n)}" aria-pressed="false">${ic("user")}${esc(n)}</button>`).join("");
   $$("#equipo .chip").forEach((b) => b.onclick = () => elegirQuien(b.dataset.n));
-  if ((I.equipo || []).length) $("#quien").placeholder = "¿Otra persona? Escribí tu nombre";
+  if ((I.equipo || []).length) { $("#quien").placeholder = "¿Otra persona? Escribí tu nombre"; $("#quien").style.marginTop = "10px"; }
   try { const g = localStorage.getItem("mc_quien"); if (g) elegirQuien(g); } catch {}
-  if (!d.productos) { st.libre = true; $("#zonaBuscar").hidden = true; $("#zonaLibre").hidden = false; $("#btnVolver").hidden = true; $("#t2sub").textContent = "Contanos qué hay que cambiar"; }
+  if (!d.productos) { st.libre = true; $("#zonaBuscar").hidden = true; $("#zonaLibre").hidden = false; $("#btnVolver").hidden = true; }
   $("#cargando").hidden = true; $("#form").hidden = false;
 })();
 
@@ -320,40 +397,56 @@ $("#buscar").oninput = (e) => {
   tB = setTimeout(async () => {
     const lista = await rpc("mc_buscar", { p_negocio: N, p_clave: K, p_q: t }).catch(() => []);
     $("#res").innerHTML = lista.length
-      ? lista.map((p, i) => `<button type="button" role="listitem" data-i="${i}"><span><b>${esc(p.nombre || p.codigo)}</b><small>${esc([p.codigo, p.detalle, p.seccion].filter(Boolean).join(" · "))}</small></span>${ic("flecha")}</button>`).join("")
-      : `<div class="nada">No encontramos «${esc(t)}». Probá con otra palabra o escribilo abajo.</div>`;
+      ? lista.map((p, i) => `<button type="button" data-i="${i}"><b>${esc(p.nombre || p.codigo)}</b><small>${esc([p.codigo, p.detalle, p.seccion].filter(Boolean).join(" · "))}</small></button>`).join("")
+      : `<div class="nada">No encontré «${esc(t)}». Probá con otra palabra o escribilo.</div>`;
     $$("#res button").forEach((b) => b.onclick = () => elegirProd(lista[+b.dataset.i]));
   }, 300);
 };
 function elegirProd(p) {
   st.prod = p;
-  $("#zonaBuscar").hidden = true; $("#zonaProd").hidden = false;
-  $("#t2sub").textContent = "Corregí lo que haga falta";
-  $("#prodNombre").textContent = p.nombre || p.codigo;
-  $("#prodDet").textContent = [p.codigo, p.seccion, p.pagina ? `pág. ${p.pagina}` : ""].filter(Boolean).join(" · ");
+  $("#secBuscar").hidden = true; $("#secProducto").hidden = false;
+  $("#prodCod").textContent = p.codigo || "";
+  $("#prodNombre").textContent = p.campos ? "" : (p.nombre || "");
+  $("#estadoTxt").textContent = [p.nombre || p.codigo, p.seccion, p.pagina ? `pág. ${p.pagina}` : ""].filter(Boolean).join(" · ") + " — cambiá lo que haga falta.";
   const ed = $("#editor");
-  if (p.campos) {
+  if (p.campos && document.body.dataset.tema === "burbujas") {
+    // como la tarjeta del catálogo: se edita sobre la tarjeta misma
+    const C = st.info.campos || {}, rol = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().split(" ")[0];
+    const campo = (k, i) => { const r = rol(C[k]), v = esc(p.campos[k] || "");
+      return `<div><label for="ce${i}">${esc(C[k])}</label>` + (r === "descripcion"
+        ? `<textarea id="ce${i}" data-k="${esc(k)}" data-rol="${r}" rows="3">${v}</textarea>` : `<input id="ce${i}" data-k="${esc(k)}" data-rol="${r}" value="${v}">`) + `</div>`; };
+    const ks = Object.keys(C), abajo = ks.filter((k) => ["precio", "presentacion"].includes(rol(C[k])));
+    abajo.sort((a) => rol(C[a]) === "precio" ? -1 : 1);
+    ed.className = "tc";
+    ed.innerHTML = ks.filter((k) => !abajo.includes(k)).map((k) => campo(k, ks.indexOf(k))).join("") +
+      (abajo.length ? `<div class="fila-precio">${abajo.map((k) => campo(k, ks.indexOf(k))).join("")}</div>` : "");
+    $$(".tc textarea").forEach((t) => { const a = () => { t.style.height = "auto"; t.style.height = t.scrollHeight + "px"; }; t.oninput = a; requestAnimationFrame(a); });
+  } else if (p.campos) {
     const C = st.info.campos || {};
-    ed.innerHTML = Object.keys(C).map((k, i) => `<label class="et" for="ce${i}">${esc(C[k])}</label>` + (/descrip/i.test(C[k])
-      ? `<textarea class="campo" id="ce${i}" data-k="${esc(k)}" rows="3">${esc(p.campos[k] || "")}</textarea>`
-      : `<input class="campo" id="ce${i}" data-k="${esc(k)}" value="${esc(p.campos[k] || "")}">`)).join("");
+    ed.className = "cat-campos";
+    ed.innerHTML = Object.keys(C).map((k, i) => `<label for="ce${i}">${esc(C[k])}</label>` + (/descrip/i.test(C[k])
+      ? `<textarea id="ce${i}" data-k="${esc(k)}" rows="3">${esc(p.campos[k] || "")}</textarea>`
+      : `<input id="ce${i}" data-k="${esc(k)}" value="${esc(p.campos[k] || "")}">`)).join("");
   } else if (p.tabla) {
-    ed.innerHTML = Object.keys(p.tabla).map((k, i) => `<label class="et" for="ct${i}">${esc(k.split(" /")[0])}</label><input class="campo" id="ct${i}" data-k="${esc(k)}" value="${esc(p.tabla[k] || "")}">`).join("");
+    ed.className = "cat-tabla";
+    ed.innerHTML = Object.keys(p.tabla).map((k, i) => `<label for="ct${i}">${esc(k.split(" /")[0])}</label><input id="ct${i}" data-k="${esc(k)}" value="${esc(p.tabla[k] || "")}">`).join("");
   } else {
+    ed.className = "";
     pintarLineas(p.lineas || []);
   }
+  scrollTo({ top: $("#secProducto").offsetTop - 12, behavior: "smooth" });
 }
 function pintarLineas(l) {
-  $("#editor").innerHTML = `<label class="et">Descripción · cada renglón es una línea de la tarjeta</label>` +
-    l.map((x, i) => `<div class="linea"><input class="campo" data-l="${i}" value="${esc(x)}" maxlength="40" aria-label="Renglón ${i + 1}"><button type="button" data-q="${i}" aria-label="Quitar renglón ${i + 1}">${ic("x")}</button></div>`).join("") +
-    (l.length < 5 ? `<button type="button" class="link" id="masLinea">${ic("mas")}Agregar renglón</button>` : "");
+  $("#editor").innerHTML = `<div class="cat-desc">DESCRIPCIÓN:</div>` +
+    l.map((x, i) => `<div class="cat-linea"><input data-l="${i}" value="${esc(x)}" maxlength="40" aria-label="Renglón ${i + 1}"><button type="button" class="elim" data-q="${i}">${ic("x")}Quitar renglón</button></div>`).join("") +
+    (l.length < 5 ? `<button type="button" class="cat-mas" id="masLinea">+ Agregar renglón</button>` : "");
   $$("[data-q]").forEach((b) => b.onclick = () => { const a = lineas(); a.splice(+b.dataset.q, 1); pintarLineas(a); });
   $("#masLinea")?.addEventListener("click", () => { const a = lineas(); a.push(""); pintarLineas(a); $$("[data-l]").at(-1)?.focus(); });
 }
 const lineas = () => $$("[data-l]").map((i) => i.value.trim());
-$("#btnOtro").onclick = () => { st.prod = null; $("#zonaProd").hidden = true; $("#zonaBuscar").hidden = false; $("#t2sub").textContent = "Buscalo por nombre o código"; $("#buscar").focus(); };
-$("#btnLibre").onclick = () => { st.libre = true; $("#zonaBuscar").hidden = true; $("#zonaLibre").hidden = false; $("#t2sub").textContent = "Contanos qué hay que cambiar"; $("#libre").focus(); };
-$("#btnVolver").onclick = () => { st.libre = false; $("#zonaLibre").hidden = true; $("#zonaBuscar").hidden = false; $("#t2sub").textContent = "Buscalo por nombre o código"; };
+$("#btnOtro").onclick = () => { st.prod = null; st.fotos = []; $("#secProducto").hidden = true; $("#secBuscar").hidden = false; limpiarFoto("", ""); $("#buscar").focus(); };
+$("#btnLibre").onclick = () => { st.libre = true; $("#zonaBuscar").hidden = true; $("#zonaLibre").hidden = false; $("#libre").focus(); };
+$("#btnVolver").onclick = () => { st.libre = false; $("#zonaLibre").hidden = true; $("#zonaBuscar").hidden = false; };
 
 async function achicar(f) {
   const bmp = await createImageBitmap(f);
@@ -362,50 +455,52 @@ async function achicar(f) {
   c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
   return c.toDataURL("image/jpeg", 0.82);
 }
-async function ponerFoto(input, img, icono, txt, sub) {
+function limpiarFoto(s) {
+  $(`#fotoImg${s}`).hidden = true; $(`#fotoVacia${s}`).hidden = false; $(`#fotoCambiar${s}`).hidden = true;
+  if (!s) $("#fotoNueva").hidden = true;
+}
+async function ponerFoto(input, s) {
   const f = input.files[0]; if (!f) return;
   const d = await achicar(f).catch(() => null); if (!d) return;
-  st.fotos = [d]; img.src = d; img.hidden = false; icono.hidden = true;
-  txt.textContent = "Foto lista"; sub.textContent = "Tocá para cambiarla";
+  st.fotos = [d];
+  $(`#fotoImg${s}`).src = d; $(`#fotoImg${s}`).hidden = false; $(`#fotoVacia${s}`).hidden = true; $(`#fotoCambiar${s}`).hidden = false;
+  if (!s) $("#fotoNueva").hidden = false;
 }
-$("#foto").onchange = (e) => ponerFoto(e.target, $("#fotoImg"), $("#fotoIc"), $("#fotoTxt"), $("#fotoSub"));
-$("#foto2").onchange = (e) => ponerFoto(e.target, $("#fotoImg2"), $("#fotoIc2"), $("#fotoTxt2"), $("#fotoSub2"));
+$("#foto").onchange = (e) => ponerFoto(e.target, "");
+$("#foto2").onchange = (e) => ponerFoto(e.target, "2");
 
-function error(t) { $("#error").innerHTML = t ? `${ic("alerta")}<span>${esc(t)}</span>` : ""; $("#error").hidden = !t; }
-function enviando(si) {
-  $("#btnEnviar").disabled = si;
-  $("#btnEnviar").innerHTML = si ? `<span class="giro" aria-hidden="true"></span><span>Enviando…</span>` : `${ic("enviar")}<span>Enviar pedido</span>`;
-}
+function error(t) { $("#error").textContent = t; $("#error").hidden = !t; if (t) $("#error").scrollIntoView({ block: "center", behavior: "smooth" }); }
 $("#form").onsubmit = async (e) => {
   e.preventDefault(); error("");
   if (!st.quien) { $("#quien").focus(); return error("Elegí quién sos o escribí tu nombre."); }
   let est = null, texto = "";
   if (st.libre || !st.prod) {
     texto = $("#libre").value.trim();
-    if (!texto) return error(st.libre ? "Contanos qué hay que cambiar." : "Buscá el producto o tocá «No lo encuentro».");
+    if (!texto) return error(st.libre ? "Contá qué hay que cambiar." : "Buscá el producto o tocá «No lo encuentro: lo escribo».");
   } else if (st.prod.campos) {
     est = { modo: "producto", codigo: st.prod.codigo, foto_nueva: !!st.fotos.length, campos: {} };
     $$("#editor [data-k]").forEach((i) => { est.campos[i.dataset.k] = i.value.trim(); });
-    if (Object.keys(est.campos).every((k) => (st.prod.campos[k] || "") === est.campos[k]) && !st.fotos.length) return error("Todavía no cambiaste nada.");
+    if (Object.keys(est.campos).every((k) => (st.prod.campos[k] || "") === est.campos[k]) && !st.fotos.length) return error("No cambiaste nada todavía.");
   } else if (st.prod.tabla) {
     est = { modo: "producto", codigo: st.prod.codigo, nuevo: false, foto_nueva: false, codigo_nuevo: "", tabla: {} };
     $$("#editor [data-k]").forEach((i) => { est.tabla[i.dataset.k] = i.value.trim(); });
-    if (Object.keys(est.tabla).every((k) => (st.prod.tabla[k] || "") === est.tabla[k])) return error("Todavía no cambiaste nada.");
+    if (Object.keys(est.tabla).every((k) => (st.prod.tabla[k] || "") === est.tabla[k])) return error("No cambiaste nada todavía.");
   } else {
     const l = lineas().filter(Boolean);
     if (!l.length) return error("La descripción no puede quedar vacía.");
     est = { modo: "producto", codigo: st.prod.codigo, nuevo: false, foto_nueva: !!st.fotos.length, codigo_nuevo: "", lineas: l,
             eliminadas: (st.prod.lineas || []).filter((x) => !l.includes(x)) };
-    if (JSON.stringify(l) === JSON.stringify(st.prod.lineas || []) && !st.fotos.length) return error("Todavía no cambiaste nada.");
+    if (JSON.stringify(l) === JSON.stringify(st.prod.lineas || []) && !st.fotos.length) return error("No cambiaste nada todavía.");
   }
-  enviando(true);
+  const txt = $("#txtEnviar").textContent;
+  $("#btnEnviar").disabled = true; $("#txtEnviar").textContent = "Guardando…";
   try {
     const r = await rpc("mc_enviar", { p_negocio: N, p_clave: K, p_nombre: st.quien, p_estructura: est, p_texto: texto, p_fotos: st.fotos });
-    if (!r?.ok) throw new Error(r?.error || "No se pudo enviar");
+    if (!r?.ok) throw new Error(r?.error || "No se pudo guardar");
     try { localStorage.setItem("mc_quien", st.quien); } catch {}
     $("#form").hidden = true; $("#listo").hidden = false; scrollTo({ top: 0, behavior: "smooth" });
-  } catch (err) { error((err.message || "No se pudo enviar") + ". Revisá la conexión y probá de nuevo."); }
-  finally { enviando(false); }
+  } catch (err) { error((err.message || "No se pudo guardar") + ". Probá de nuevo."); }
+  finally { $("#btnEnviar").disabled = false; $("#txtEnviar").textContent = txt; }
 };
 $("#btnNuevo").onclick = () => location.reload();
 </script>
