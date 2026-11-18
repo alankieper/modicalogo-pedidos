@@ -1,0 +1,62 @@
+/* Tema "burbujas" del link del equipo (Todo Limpio): el naranja del catálogo, burbujas de vidrio, Cocogoose y la tarjeta del catálogo.
+   Es el mismo diseño que la página de la nube (nube-link/index.html). Se suma a pedir.html cuando marca.json dice "tema_link": "burbujas". */
+body[data-tema="burbujas"] { --fondo: #F5F7FC; --naranja: var(--acento, #F39200); background: var(--fondo); }
+[data-tema="burbujas"] .cab { background: linear-gradient(165deg, color-mix(in srgb, var(--naranja) 70%, #FFD24A) 0%, var(--naranja) 48%, color-mix(in srgb, var(--naranja) 80%, #C2410C) 100%) !important;
+  padding-bottom: 104px; }
+[data-tema="burbujas"] .cab-flecha, [data-tema="burbujas"] .cab-lineas { display: none; }
+[data-tema="burbujas"] .cab-onda path:nth-child(1) { fill: rgba(255,255,255,.35); }
+[data-tema="burbujas"] .cab-onda path:nth-child(2) { opacity: .55; }
+[data-tema="burbujas"] .cab::before { content: ""; position: absolute; inset: -30%; pointer-events: none; filter: blur(42px);
+  background: radial-gradient(35% 35% at 25% 30%, rgba(255,226,150,.75), transparent 70%), radial-gradient(30% 30% at 80% 20%, rgba(255,140,60,.55), transparent 70%),
+              radial-gradient(40% 40% at 55% 85%, rgba(255,190,110,.5), transparent 70%); animation: tb-aurora 18s ease-in-out infinite alternate; }
+@keyframes tb-aurora { to { transform: translate3d(6%, 5%, 0) scale(1.12); } }
+.cab-burbujas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+[data-tema="burbujas"] .cab-logo { height: 40px; max-width: 70%; object-fit: contain; filter: drop-shadow(0 4px 14px rgba(120,40,0,.25)); }
+[data-tema="burbujas"] .cab-chip { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.4); }
+[data-tema="burbujas"] .cab h1 { font-style: normal; font-size: 34px; line-height: 1.05; text-transform: none; letter-spacing: -.2px; text-shadow: 0 2px 16px rgba(140,50,0,.3); }
+[data-tema="burbujas"] .cab p { color: rgba(255,255,255,.92); }
+[data-tema="burbujas"] main, [data-tema="burbujas"] .pie { position: relative; z-index: 1; }
+[data-tema="burbujas"] .tarjeta { border-radius: 26px; border-color: rgba(31,58,143,.06); box-shadow: 0 1px 2px rgba(31,58,143,.05), 0 18px 40px -18px rgba(31,58,143,.28); }
+[data-tema="burbujas"] .paso { font-family: "Dunk95", sans-serif; font-size: 18px; color: var(--azul-tx); }
+[data-tema="burbujas"] .paso .n { width: 34px; height: 34px; min-width: 0; border-radius: 50%; display: grid; place-items: center; font: 700 15px "Dunk95", sans-serif; font-style: normal; color: #fff; position: relative;
+  background: radial-gradient(circle at 32% 28%, color-mix(in srgb, var(--azul) 55%, white) 0%, var(--azul) 60%, color-mix(in srgb, var(--azul) 75%, black) 100%);
+  box-shadow: inset 0 -3px 6px rgba(0,0,0,.18), 0 6px 14px -6px color-mix(in srgb, var(--azul) 70%, transparent); }
+[data-tema="burbujas"] .paso .n::after { content: ""; position: absolute; left: 7px; top: 5px; width: 9px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.75); transform: rotate(-35deg); }
+[data-tema="burbujas"] .modo { border-radius: 20px; }
+[data-tema="burbujas"] .modo .ico { border-radius: 50%; background: color-mix(in srgb, var(--naranja) 13%, white); color: color-mix(in srgb, var(--naranja) 75%, black); }
+[data-tema="burbujas"] .modo[aria-pressed="true"] { border-color: var(--naranja); background: color-mix(in srgb, var(--naranja) 5%, white); box-shadow: 0 0 0 3px color-mix(in srgb, var(--naranja) 16%, transparent); }
+[data-tema="burbujas"] .modo[aria-pressed="true"] .ico { background: var(--naranja); color: #fff; }
+[data-tema="burbujas"] input.campo:focus { border-color: var(--naranja); box-shadow: 0 0 0 4px color-mix(in srgb, var(--naranja) 16%, transparent); }
+[data-tema="burbujas"] .btn-primario { background: linear-gradient(135deg, color-mix(in srgb, var(--naranja) 75%, #FFC53D) 0%, var(--naranja) 50%, color-mix(in srgb, var(--naranja) 85%, #C2410C) 100%);
+  box-shadow: 0 1px 0 rgba(255,255,255,.35) inset, 0 12px 26px -10px color-mix(in srgb, var(--naranja) 80%, transparent); border-radius: 18px; }
+/* burbujas tenues que suben por el fondo (las mismas de la web) */
+.burbujas { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; color: color-mix(in srgb, var(--naranja, #F39200) 20%, transparent); }
+.burbuja { position: absolute; bottom: -120px; border-radius: 50%; border: 2px solid currentColor; opacity: 0; animation: tb-subir var(--dur, 26s) linear var(--delay, 0s) infinite; }
+.burbuja::after { content: ""; position: absolute; inset: 22%; border-radius: 50%; border: 2px solid transparent; border-right-color: currentColor; transform: rotate(20deg); }
+@keyframes tb-subir { 0% { transform: translate3d(0,0,0); opacity: 0; } 8% { opacity: 1; } 50% { transform: translate3d(var(--deriva, 14px), -55vh, 0); } 92% { opacity: 1; } 100% { transform: translate3d(0, -115vh, 0); opacity: 0; } }
+/* la tarjeta igual a la del catálogo: foto, nombre azul, subtítulo en cursiva, descripción y el precio grande */
+[data-tema="burbujas"] .cat { font-family: "Aktiv Grotesk", sans-serif; border: 0; border-radius: 22px; background: #fff; max-width: 360px;
+  box-shadow: 0 0 0 1px rgba(31,58,143,.07), 0 16px 34px -18px rgba(31,58,143,.35); padding: 14px 16px 18px; }
+[data-tema="burbujas"] .cat-cab span { font: 700 13px "Aktiv Grotesk", sans-serif; color: var(--azul-tx); }
+[data-tema="burbujas"] .cat-cod { font: 400 16px "Aktiv Grotesk", sans-serif; text-align: left; border-bottom-style: solid; border-bottom-color: #E1E6F0; }
+[data-tema="burbujas"] .cat-foto .vacia { border-color: color-mix(in srgb, var(--naranja) 35%, white); color: color-mix(in srgb, var(--naranja) 70%, black); background: color-mix(in srgb, var(--naranja) 5%, white); }
+[data-tema="burbujas"] .cat-sombra { display: none; }
+[data-tema="burbujas"] .cat-campos label { margin: 10px 0 2px; text-align: center; font: 600 10.5px "Aktiv Grotesk", sans-serif; letter-spacing: 1.2px; text-transform: uppercase; color: #9AA4BC; }
+[data-tema="burbujas"] .cat-campos input, [data-tema="burbujas"] .cat-campos textarea { text-align: center; border: 0; border-radius: 10px; background: transparent; padding: 4px 6px; color: #2B3550;
+  font: 400 15px/1.4 "Aktiv Grotesk", sans-serif; resize: none; outline: 1.5px dashed transparent; box-shadow: none; transition: outline-color .15s, background .15s; }
+[data-tema="burbujas"] .cat-campos input:hover, [data-tema="burbujas"] .cat-campos textarea:hover { outline-color: #D5DCEB; }
+[data-tema="burbujas"] .cat-campos input:focus, [data-tema="burbujas"] .cat-campos textarea:focus { outline: 1.5px solid var(--naranja); background: color-mix(in srgb, var(--naranja) 5%, white); box-shadow: none; }
+[data-tema="burbujas"] .cat-campos .falta { outline: 1.5px solid #D93838; background: #FFF6F6; }
+[data-tema="burbujas"] .cat-campos [data-rol="nombre"] { font: 700 23px/1.15 "Dunk95", sans-serif; color: var(--azul-tx); }
+[data-tema="burbujas"] .cat-campos [data-rol="subtitulo"] { font-style: italic; font-size: 15px; color: #3A4256; }
+[data-tema="burbujas"] .cat-campos [data-rol="descripcion"] { font-size: 14.5px; }
+[data-tema="burbujas"] .cat-campos .fila-precio { display: grid; grid-template-columns: 1.3fr 1fr; gap: 8px; align-items: end; margin-top: 6px; }
+[data-tema="burbujas"] .cat-campos [data-rol="precio"] { font: 700 28px "Dunk95", sans-serif; color: var(--azul-tx); text-align: left; }
+[data-tema="burbujas"] .cat-campos [data-rol="presentacion"] { font-style: italic; font-size: 13px; color: #8A93A6; text-align: right; }
+[data-tema="burbujas"] .fila-precio > div:first-child label { text-align: left; }
+[data-tema="burbujas"] .fila-precio > div:last-child label { text-align: right; }
+[data-tema="burbujas"] .estado-prod.ok { background: color-mix(in srgb, var(--azul) 7%, white); color: var(--azul-tx); }
+@media (prefers-reduced-motion: reduce) { .burbuja { opacity: .8; bottom: auto; top: var(--top, 40%); animation: none; } [data-tema="burbujas"] .cab::before { animation: none; } }
+[data-tema="burbujas"] .modo { padding: 12px 9px; gap: 5px; }
+[data-tema="burbujas"] .modo b { font-size: 13.5px; }
+[data-tema="burbujas"] .modo small { font-size: 11px; line-height: 1.3; }
