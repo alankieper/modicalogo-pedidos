@@ -833,13 +833,7 @@ html.es-app body { padding-top: env(safe-area-inset-top); }
   .h-fila { padding: 4px 64px 8px; scroll-padding-inline: 64px; }
 }
 </style>
-<style id="letrasCatalogo">@font-face{font-family:"Catalogo Titulo";src:url("tema-fuente/HelveticaNeueLTStd-HvCn.otf?v=1795027172") format("opentype");font-display:swap}@font-face{font-family:"Catalogo Texto";src:url("tema-fuente/HelveticaNeueLTStd-Cn.otf?v=1795027172") format("opentype");font-display:swap}.cat,.cat input,.cat-linea input,.cat-tabla input{font-family:"Catalogo Texto","Roboto Condensed","Arial Narrow",sans-serif}.cat-cab span,.cat-cod,.cat-desc,.cat-tabla label,.cat .sello{font-family:"Catalogo Titulo","Roboto Condensed","Arial Narrow",sans-serif;font-weight:400}.cat-cab span,.cat-desc{letter-spacing:.2px}</style>
-<style>
-/* en la nube: lo que necesita la compu (mover, hojas, vista exacta) lo resuelve Alan en el editor */
-.modo[data-sub="lugar"], .modo[data-modo="hoja"], #btnMover, #historias { display: none !important; }
-.modos { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-@media (max-width: 619px) { .modos { grid-template-columns: 1fr !important; } }
-</style>
+<style></style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -1080,8 +1074,10 @@ html.es-app body { padding-top: env(safe-area-inset-top); }
 <script>window.NUBE_CFG = {"sb": "https://apnyksshjsfrioqdiica.supabase.co", "pub": "sb_publishable_LwIINQKikHSxbYdfnw87Hw_psn-AOGV", "n": "logbelts-practica"};</script>
 <script>
 /* PÁGINA DE PEDIDOS EN LA NUBE (GitHub Pages)
-   Es la misma página que sirve el editor (pedir.html), pero los datos los pide a la nube (Supabase) en vez de a la compu:
-   así funciona siempre igual, con la compu prendida o apagada, y los pedidos quedan en la nube hasta que una compu los baja.
+   Es la misma página que sirve el editor (pedir.html). Siempre se ve igual y nunca avisa si la compu está prendida:
+   - si la compu del catálogo responde, por detrás usa la compu (vista previa exacta, dónde va, hojas, cambios hechos);
+   - si no responde, usa lo que está en la nube (productos, fotos y hojas publicadas, estado del equipo).
+   Los pedidos SIEMPRE van a la nube: la compu (la que se prenda) los baja y avisa.
    window.NUBE_CFG = { sb, pub, n } lo escribe el editor al publicar. La clave (k) viaja en el link, nunca queda publicada. */
 (() => {
   "use strict";
@@ -1094,7 +1090,9 @@ html.es-app body { padding-top: env(safe-area-inset-top); }
     if (k) localStorage.setItem(LS, k);
     else if ((k = localStorage.getItem(LS) || "")) { q.set("k", k); history.replaceState(null, "", "?" + q); }
   } catch {}
+  const kq = "k=" + encodeURIComponent(k);
 
+  const conTiempo = (ms) => { const c = new AbortController(); setTimeout(() => c.abort(), ms); return c.signal; };
   async function rpc(fn, args) {
     const r = await _fetch(`${C.sb}/rest/v1/rpc/${fn}`, { method: "POST", headers: { apikey: C.pub, "Content-Type": "application/json" }, body: JSON.stringify(args) });
     if (!r.ok) throw new Error("rpc " + r.status);
@@ -1110,24 +1108,58 @@ html.es-app body { padding-top: env(safe-area-inset-top); }
   const json = (d, status = 200) => new Response(JSON.stringify(d), { status, headers: { "Content-Type": "application/json" } });
   const dataUrl = (blob) => new Promise((ok) => { const fr = new FileReader(); fr.onload = () => ok(fr.result); fr.onerror = () => ok(""); fr.readAsDataURL(blob); });
 
-  window.NUBE = { urlFoto: (c) => `fotos/${encodeURIComponent(c)}.jpg`, info };
-
-  // letras de la marca: vienen de la nube al abrir (no quedan publicadas como archivos)
-  info().then((d) => {
-    const m = d?.info?.marca; if (!m) return;
-    const fam = { MarcaTexto: "Aktiv Grotesk", MarcaTitulo: "Dunk95" };
-    const s = document.createElement("style");
-    s.textContent = (m.fuentes || []).map((f) => `@font-face{font-family:"${fam[f.familia] || f.familia}";src:url(${f.src}) format("woff2");font-weight:${f.peso};font-display:swap}`).join("");
-    document.head.append(s);
+  // la compu del catálogo: si responde, se usa por detrás (sin avisar nada en ningún caso)
+  let mac = null;                                  // dirección de la compu cuando responde
+  const macP = info().then(async (d) => {
+    const base = d?.info?.link;
+    if (!base) return null;
+    try {
+      const r = await _fetch(`${base}vivo?${kq}`, { signal: conTiempo(3500) });
+      const j = r.ok ? await r.json() : null;
+      if (j?.ok && j.catalogo) mac = base;
+    } catch {}
+    return mac;
   });
+  async function aMac(u, opt) {
+    await macP;
+    if (!mac) return null;
+    try {
+      const r = await _fetch(mac + u, { ...opt, signal: conTiempo(12000) });
+      if (r.ok || r.status === 400) return r;
+    } catch {}
+    return null;
+  }
+
+  window.NUBE = {
+    info,
+    urlFoto: (c, fresca) => (mac ? `${mac}foto?${kq}&codigo=${encodeURIComponent(c)}${fresca ? "&r=" + Date.now() : ""}` : `fotos/${encodeURIComponent(c)}.jpg`),
+    urlHoja: (n) => (mac ? `${mac}hoja.png?${kq}&n=${n}&r=${Date.now()}` : `hojas/${n}.jpg`),
+    urlCambio: (id, v) => `${mac || ""}cambio.png?${kq}&id=${encodeURIComponent(id)}&v=${v}`,
+  };
+
+  // letras de la marca y de la tarjeta del catálogo: vienen de la nube al abrir (no quedan publicadas como archivos)
+  info().then((d) => {
+    const i = d?.info || {}, css = [];
+    const fam = { MarcaTexto: "Aktiv Grotesk", MarcaTitulo: "Dunk95" };
+    for (const f of i.marca?.fuentes || []) css.push(`@font-face{font-family:"${fam[f.familia] || f.familia}";src:url(${f.src}) format("woff2");font-weight:${f.peso};font-display:swap}`);
+    for (const f of i.letras_tarjeta?.caras || []) css.push(`@font-face{font-family:"${f.familia}";src:url(${f.src}) format("woff2");font-display:swap}`);
+    if (i.letras_tarjeta?.css) css.push(i.letras_tarjeta.css);
+    const s = document.createElement("style"); s.textContent = css.join(""); document.head.append(s);
+  });
+
+  const DE_LA_COMPU = new Set(["producto", "buscar", "vista-previa", "ubicar", "ubicar-recomendar", "hoja", "secciones", "cambios", "ortografia", "pedidos-equipo"]);
 
   window.fetch = async (url, opt = {}) => {
     const u = typeof url === "string" ? url : url.url;
-    if (/^(https?:)?\/\//.test(u) || /^(fotos|sw\.js|manifest)/.test(u)) return _fetch(url, opt);
+    if (/^(https?:)?\/\//.test(u) || /^(fotos|hojas|sw\.js|manifest)/.test(u)) return _fetch(url, opt);
     const [ruta, qs] = u.split("?");
     const p = new URLSearchParams(qs || "");
     try {
-      switch (ruta) {
+      if (DE_LA_COMPU.has(ruta)) {                 // primero la compu (lo más completo y al día)
+        const r = await aMac(u, opt);
+        if (r) return r;
+      }
+      switch (ruta) {                              // sin la compu: lo que está en la nube
         case "producto": {
           const c = p.get("codigo") || "";
           const [l] = await Promise.all([buscar(c), fotosP]);
@@ -1145,11 +1177,23 @@ html.es-app body { padding-top: env(safe-area-inset-top); }
           return json({ mes: e.mes || {}, pendientes: e.pendientes || [], preguntas: e.preguntas || [], hechos: e.hechos || [], no_van: e.no_van || [] });
         }
         case "secciones": return json({ ok: true, secciones: (await info())?.info?.secciones || [] });
+        case "hoja": {
+          const h = (await info())?.info?.hojas || {}, n = parseInt(p.get("n") || "0", 10);
+          if (!h.total) return json({ ok: false, error: "No pude cargar la hoja. Probá de nuevo en un rato." });
+          if (!(n >= 1 && n <= h.total)) return json({ ok: false, error: `Esa página no existe. El catálogo tiene ${h.total} páginas.` });
+          return json({ ok: true, pagina: n, total: h.total, titulos: h.titulos?.[String(n)] || [] });
+        }
+        case "ubicar": {                           // dónde va: queda anotado al lado de qué producto (Alan lo acomoda)
+          const b = JSON.parse(opt.body || "{}"), v = String(b.vecino || "").replace(/\D/g, "");
+          const x = (await buscar(v)).find((r) => r.codigo === v);
+          return json(x ? { ok: true, sencillo: true, pagina: x.pagina, nombre: x.nombre || "" }
+            : { ok: false, sencillo: true, error: "Ese código no está en el catálogo. Fijate que esté bien escrito." });
+        }
         case "avisos/clave": return json({ publica: (await info())?.info?.avisos_publica || "" });
         case "cambios": return json({ cambios: [] });
         case "ortografia": return json([]);
         case "avisos/probar": return json({ ok: true });
-        case "vista-previa": case "ubicar": case "ubicar-recomendar": case "hoja": return json({ ok: false });
+        case "vista-previa": case "ubicar-recomendar": return json({ ok: false });
         case "avisos/suscribir": {
           const b = JSON.parse(opt.body);
           const r = await enviarNube(b.nombre, { modo: "aviso", sub: b.sub }, "");
@@ -1160,7 +1204,7 @@ html.es-app body { padding-top: env(safe-area-inset-top); }
           const r = await enviarNube(b.nombre, { modo: "respuesta", id: b.id }, b.texto);
           return json({ ok: !!r?.ok, error: r?.error });
         }
-        case "enviar": {
+        case "enviar": {                           // siempre a la nube: la compu que se prenda lo baja y avisa
           const f = opt.body;
           const est = JSON.parse(f.get("estructura") || "null");
           const fs = [];
@@ -1184,6 +1228,8 @@ const K = new URLSearchParams(location.search).get("k") || "";
 const kq = `k=${encodeURIComponent(K)}`;
 /* la foto de un producto: en la compu la sirve el editor; en la nube, la publicada (window.NUBE la reemplaza) */
 const urlFoto = window.NUBE?.urlFoto || ((c, fresca) => `foto?${kq}&codigo=${encodeURIComponent(c)}${fresca ? "&r=" + Date.now() : ""}`);
+const urlHoja = window.NUBE?.urlHoja || ((n) => `hoja.png?${kq}&n=${n}&r=${Date.now()}`);
+const urlCambio = window.NUBE?.urlCambio || ((id, v) => `cambio.png?${kq}&id=${encodeURIComponent(id)}&v=${v}`);
 const esc = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const guardado = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch { return null; } };
 const st = { quien: "", modo: "", prod: null, codBuscado: "", fotoNueva: null, hoja: null };
@@ -1769,7 +1815,6 @@ function conPrevia(v) {
 st.ubic = null;
 let tUb, ubN = 0;
 function mostrarUbicar(v, conservar = false, mover = false) {
-  if (window.NUBE) v = false;                 // en la nube: dónde va lo decide Alan en el editor
   const caja = $("#ubicar");
   if (!v) { ubN++; clearTimeout(tUb); st.ubic = null; $("#ubVecino").value = ""; $("#ubRes").innerHTML = ""; }
   else if (!conservar && caja.hidden) { st.ubic = null; $("#ubRes").innerHTML = ""; }
@@ -1883,7 +1928,10 @@ function pintarUbicacion() {
   const nombre = esc((st.quien || "").split(" ")[0]);
   const opc = (dec, icono, tit, txt, extra = "") => `<button type="button" class="ub-opc" data-dec="${dec}" aria-pressed="${u.decision === dec}"><span class="ub-ico">${ico(icono)}</span><span><b>${tit}${extra}</b><small>${txt}</small></span></button>`;
   let html = "";
-  if (r.ok === false && !nd.dest && !nd.sube) {
+  if (r.sencillo) {
+    html = r.ok === false ? `<div class="ub-caso mal">${ico("alert")}<span>${esc(r.error)}</span></div>`
+      : `<div class="ub-caso ok">${ico("check")}<span><b>Va al lado del ${esc(u.vecino)}</b>${r.nombre ? ` (${esc(r.nombre)})` : ""}${r.pagina ? `, en la hoja ${r.pagina}` : ""}. Alan lo acomoda en el catálogo.</span></div>`;
+  } else if (r.ok === false && !nd.dest && !nd.sube) {
     html = `<div class="ub-caso mal">${ico("alert")}<span>${esc(r.error)}</span></div>`;
   } else {
     const pag = nd.pagina, sig = pag + 1, rec = u.rec;
@@ -1989,7 +2037,7 @@ async function verHoja() {
   try { r = await (await fetch(`hoja?${kq}&n=${n}`)).json(); } catch { caja.innerHTML = "No pude cargar la hoja. ¿Está prendida la PC de Alan?"; return; }
   if (!r.ok) { caja.innerHTML = esc(r.error); st.hoja = null; return; }
   st.hoja = r;
-  caja.innerHTML = `<img src="hoja.png?${kq}&n=${n}&r=${Date.now()}" alt="Hoja ${n} del catálogo">`;
+  caja.innerHTML = `<img src="${urlHoja(n)}" alt="Hoja ${n} del catálogo">`;
   $("#titulos").innerHTML = r.titulos.length
     ? r.titulos.map((t, i) => `<div class="titulo-ed" data-i="${i}"><label for="tit${i}">${r.titulos.length > 1 ? `Título ${i + 1} de la hoja` : "Título de la hoja"} (tocalo para corregirlo)</label><input id="tit${i}" value="${esc(t.titulo)}" maxlength="80"></div>`).join("")
     : `<div class="ayuda">Esta hoja no tiene títulos para cambiar (tapa, índice o páginas fijas).</div>`;
@@ -2064,7 +2112,7 @@ function armarProducto() {
     const igual = JSON.stringify(est.lineas) === JSON.stringify(st.prod.lineas);
     if (igual && !st.fotoNueva && !est.codigo_nuevo && !st.mover) throw "No cambiaste nada todavía.";
   }
-  if ((st.prod.nuevo || st.mover) && !window.NUBE) {
+  if (st.prod.nuevo || st.mover) {
     const u = st.ubic;
     if (!u?.r) { $("#ubVecino").focus(); throw st.mover ? "Falta decir al lado de qué producto lo pasamos (paso 4), o tocá «Dejarlo donde está»." : "Falta decir al lado de qué producto va (paso 4)."; }
     if (!u.ok) { $("#ubicar").scrollIntoView({ behavior: "smooth", block: "center" }); throw u.r.ok === false ? u.r.error : "Falta decidir qué hacemos en el paso 4: elegí una de las opciones."; }
@@ -2636,7 +2684,7 @@ async function cargarHistorias() {
   historias = r.cambios || [];
   $("#historias").hidden = !historias.length;
   $("#hFila").innerHTML = historias.map((h) => `<button type="button" class="h-item ${vistos.has(h.id) ? "visto" : ""}" data-h="${esc(h.id)}" aria-label="Cambio de ${esc(h.nombre)}: ${esc(tituloCambio(h))}">
-    <span class="h-anillo"><span class="h-foto"><img loading="lazy" alt="" src="cambio.png?${kq}&id=${encodeURIComponent(h.id)}&v=despues"><span class="h-av">${esc(h.nombre.charAt(0).toUpperCase())}</span><span class="h-hace">${esc(cuandoRel(h.resuelto))}</span></span></span>
+    <span class="h-anillo"><span class="h-foto"><img loading="lazy" alt="" src="${urlCambio(h.id, "despues")}"><span class="h-av">${esc(h.nombre.charAt(0).toUpperCase())}</span><span class="h-hace">${esc(cuandoRel(h.resuelto))}</span></span></span>
     <span class="h-que">${esc(tituloCambio(h))}</span></button>`).join("");
   setTimeout(flechasH, 60);
 }
@@ -2676,7 +2724,7 @@ function verCual(cual) {
   zoomA(1, 0, 0);
   img.classList.add("cargando");
   img.onload = () => img.classList.remove("cargando");
-  img.src = h.img ? h.img[cual] : `cambio.png?${kq}&id=${encodeURIComponent(h.id)}&v=${cual}`;
+  img.src = h.img ? h.img[cual] : urlCambio(h.id, cual);
   img.alt = `${tituloCambio(h)}: ${cual === "antes" ? "cómo estaba" : "cómo quedó"}`;
 }
 $("#vSeg").addEventListener("click", (e) => { const b = e.target.closest("[data-v]"); if (b) verCual(b.dataset.v); });
