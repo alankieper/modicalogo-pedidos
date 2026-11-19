@@ -1484,6 +1484,7 @@ $("#inpFoto").addEventListener("change", (e) => {
   st.fotoNueva = { file: f, url: URL.createObjectURL(f) };
   pintarFoto();
   revisarFoto(f);
+  try { pedirPrevia(); } catch {}
 });
 /* «No sé el código»: buscan por nombre y eligen tocando la foto */
 function verNoSe() { $("#btnNoSe").hidden = !!CAMPOS || st.modo !== "producto" || st.sub === "nuevo" || !$("#buscaFoto").hidden; }
@@ -1758,7 +1759,8 @@ async function pedirPrevia() {
   } else caja.classList.add("actualizando");
   let r = null;
   const conActual = st.previaActual?.codigo !== st.prod.codigo;
-  try { r = await (await fetch("vista-previa", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k: K, estructura: est, con_actual: conActual }) })).json(); } catch {}
+  const foto = st.fotoNueva ? await fotoParaPrevia(st.fotoNueva) : null;
+  try { r = await (await fetch("vista-previa", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ k: K, estructura: est, con_actual: conActual, foto }) })).json(); } catch {}
   if (n !== previaN) return st.noEntra;
   caja.classList.remove("actualizando", "esqueleto");
   if (!r?.ok) { caja.hidden = true; conPrevia(false); st.noEntra = []; return []; }
@@ -1773,8 +1775,23 @@ async function pedirPrevia() {
   $$("#lineas input, #catTabla input, #catCampos [data-k]").forEach((i) => i.classList.toggle("no-entra", st.noEntra.includes(i.value.trim())));
   $("#previaMal").hidden = !st.noEntra.length;
   $("#previaMal").innerHTML = st.noEntra.length ? `<svg class="i"><use href="#i-alert"/></svg><span>«${esc(st.noEntra[0])}» no entra en la tarjeta. Acortalo un poco.</span>` : "";
-  $("#previaNota").hidden = !st.fotoNueva;
+  $("#previaNota").hidden = !st.fotoNueva || !!r.con_foto;
   return st.noEntra;
+}
+// la foto nueva achicada (para que viaje rápido) y guardada para no rehacerla en cada letra que escriben
+function fotoParaPrevia(fn) {
+  return (fn.previa ||= new Promise((ok) => {
+    const im = new Image();
+    im.onload = () => {
+      const k = Math.min(1, 900 / Math.max(im.naturalWidth, im.naturalHeight));
+      const c = document.createElement("canvas");
+      c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k);
+      c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+      ok(c.toDataURL("image/jpeg", 0.88));
+    };
+    im.onerror = () => ok(null);
+    im.src = fn.url;
+  }));
 }
 function cambiosPrevia(est) {
   const out = [], pr = st.prod || {};
